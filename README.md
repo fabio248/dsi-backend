@@ -8,4 +8,4 @@ Steps to run this project:
 
 
 En caso de poseer errores con las dependencias usar este comando:
-npm config set legacy-peer-deps true
+1. `npm config set legacy-peer-deps true`
