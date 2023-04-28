@@ -7,5 +7,5 @@ Steps to run this project:
 3. Run `npm run dev` command
 
 
-En caso de poseer errores con las dependencias usar este comando 
+En caso de poseer errores con las dependencias usar este comando:
 npm config set legacy-peer-deps true
