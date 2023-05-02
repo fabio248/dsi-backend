@@ -1,5 +1,5 @@
-import express, { Application } from 'express';
-import { routerApi } from '../routes';
+import express, { Application } from "express";
+import { routerApi } from "../routes";
 
 function createServer(): Application {
   const app: Application = express();
@@ -8,7 +8,7 @@ function createServer(): Application {
   app.use(express.urlencoded({ extended: true }));
 
   routerApi(app);
-  app.get('/ping', (_, res) => res.send('pong'));
+  app.get("/ping", (_, res) => res.send("pong"));
   return app;
 }
 

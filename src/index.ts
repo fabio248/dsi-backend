@@ -10,9 +10,9 @@ let server: Server;
 AppDataSource.initialize()
   .then(async () => {
     server = app.listen(config.port, () => {
-      console.log(`Server running on ${config.port}`);
+      console.log(`Server Listening on http://localhost:${config.port}`)
     });
   })
-  .catch((error) => console.log(error));
+  .catch((error) => console.error(error));
 
 export { app, server };
