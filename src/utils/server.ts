@@ -2,7 +2,7 @@ import express, { Application } from 'express';
 import { routerApi } from '../routes';
 import cors from 'cors';
 import { userRouter } from '../routes/user.routes';
-import { AuthRouter } from '../routes/Auth.routes';
+import { AuthRouter } from '../routes/auth.routes';
 
 function createServer(): Application {
   const app: Application = express();
