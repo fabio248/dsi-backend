@@ -19,6 +19,8 @@ const registerUser = async (
     user.email = email;
     user.password = hashPassword;
 
+    console.log(user);
+
     // user.save();
     if (user != null) {
       res.status(200).json({
