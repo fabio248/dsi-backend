@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { UserService } from '../service/user.service';
 
 function login(req: Request, res: Response, next: NextFunction) {
   try {
