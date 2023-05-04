@@ -20,7 +20,7 @@ function RefreshAccessToken(email: any) {
   expiredToken.setMonth(expiredToken.getMonth() + 1);
 
   const payload = {
-    token_type: 'access_token',
+    token_type: 'refresh_Token',
     user_id: email,
     iat: Date.now(),
     exp: expiredToken.getTime(),
