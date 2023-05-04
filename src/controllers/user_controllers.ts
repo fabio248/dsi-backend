@@ -17,8 +17,21 @@ const registerUser = async (
       user,
     });
   } catch (error) {
+    res.status(500).send('Has been a error, please try again');
     next(error);
   }
 };
 
-export { registerUser };
+const getUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = req.body;
+    const userObtained = await userService.getUser(email);
+
+    res.status(200).send({ Usuario: userObtained });
+  } catch (error) {
+    res.status(500).send('Has been a error, please try again');
+    next(error);
+  }
+};
+
+export { registerUser, getUser };

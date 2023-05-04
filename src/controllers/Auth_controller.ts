@@ -1,12 +1,43 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserService } from '../service/user.service';
+import { CreateAccessToken, RefreshAccessToken } from '../utils/jwt';
+import bcrypt from 'bcryptjs';
 
-function login(req: Request, res: Response, next: NextFunction) {
+const userService = new UserService();
+
+const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    res.status(200).send("It's Ok");
+    const { email, password } = req.body;
+    const newEmail = email.toLowerCase();
+
+    const userObtained = await userService.getUser(newEmail);
+
+    const test = bcrypt.decodeBase64(userObtained.password, 10);
+
+    bcrypt.compare(
+      password,
+      userObtained.password,
+      (bcryptError: any, cheack) => {
+        if (bcryptError) {
+          res
+            .status(500)
+            .send({ msg: 'Error of the server, please try again!' });
+        } else if (!cheack) {
+          res
+            .status(500)
+            .send({ msg: 'Error of the server, please try again!' });
+        } else {
+          res.status(201).send({
+            accesToken: CreateAccessToken(newEmail),
+            refreshToken: RefreshAccessToken(newEmail),
+          });
+        }
+      }
+    );
   } catch (error) {
-    throw res.status(400).send(error);
+    res.status(400).send('Has been a error, please try again');
+    next(error);
   }
-}
+};
 
 export { login };
