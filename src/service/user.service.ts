@@ -29,4 +29,16 @@ export class UserService {
     }
     return getuser;
   }
+
+  async deleteUser(email) {
+    const userDelete = await this.userRepository.delete({ email });
+    return userDelete;
+  }
+
+  //obtener todos los usuarios
+  async getAllUsers(): Promise<Array<User>> {
+    const allUser: Array<User> = await this.userRepository.find();
+    allUser.map((user: User) => delete user.password);
+    return allUser;
+  }
 }

@@ -1,4 +1,3 @@
-import { AppDataSource } from '../data-source';
 import { configJwt } from '../config/config';
 import jwt from 'jsonwebtoken';
 
