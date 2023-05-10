@@ -30,6 +30,17 @@ export class UserService {
     return getuser;
   }
 
+  async getUserForId(id): Promise<User> {
+    const getuser = await this.userRepository.findOneBy({ id });
+    if (getuser === null) {
+      throw boom.badRequest('User not found');
+    } else if (id != getuser.id) {
+      throw boom.badRequest('User not found');
+    }
+    delete getuser.password;
+    return getuser;
+  }
+
   async deleteUser(email) {
     const userDelete = await this.userRepository.delete({ email });
     return userDelete;
@@ -40,5 +51,13 @@ export class UserService {
     const allUser: Array<User> = await this.userRepository.find();
     allUser.map((user: User) => delete user.password);
     return allUser;
+  }
+
+  async updateUser(id, data) {
+    await this.userRepository.update(id, data);
+    //es un test para verificar que los datos se han actualizado
+    //este elemento no debe existir en la etapa final
+    const UserUpdated = await this.getUserForId(id);
+    return UserUpdated;
   }
 }

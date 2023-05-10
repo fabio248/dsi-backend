@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserService } from '../service/user.service';
+import bcrypt from 'bcryptjs';
 
 const userService = new UserService();
 
@@ -18,7 +19,7 @@ const registerUser = async (
       user,
     });
   } catch (error) {
-    res.status(500).send('Has been a error, please try again');
+    res.status(500).send('Has been a error, please try again!');
     next(error);
   }
 };
@@ -31,7 +32,7 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
 
     res.status(200).send({ Usuario: userObtained });
   } catch (error) {
-    res.status(500).send('Has been a error, please try again');
+    res.status(500).send('Has been a error, please try again!');
     next(error);
   }
 };
@@ -44,7 +45,7 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     await userService.deleteUser(email);
     res.status(200).send({ message: 'deleted user' });
   } catch (error) {
-    res.status(500).send('Has been a error, please try again');
+    res.status(500).send('Has been a error, please try again!');
     next(error);
   }
 };
@@ -54,9 +55,33 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
     const allUsers = await userService.getAllUsers();
     res.status(200).json({ Users: allUsers });
   } catch (error) {
-    res.status(500).send('Has been a error, please try again');
+    res.status(500).send('Has been a error, please try again!');
+    next(error);
+  }
+};
+const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const newData = req.body;
+
+    if (newData.password) {
+      const salt = bcrypt.genSaltSync(10);
+      const hashPassword = bcrypt.hashSync(newData.password, salt);
+
+      newData.password = hashPassword;
+    } else {
+      delete newData.password;
+    }
+    const userObtained = await userService.updateUser(id, newData);
+    //es un test para verificar que los datos se han actualizado
+    //user: userObteined no debe existir en la etapa final
+    res
+      .status(200)
+      .send({ msg: 'User updated successfully', user: userObtained });
+  } catch (error) {
+    res.status(500).send('Has been a error, please try again!');
     next(error);
   }
 };
 
-export { registerUser, getUser, deleteUser, getAllUsers };
+export { registerUser, getUser, deleteUser, getAllUsers, updateUser };

@@ -4,6 +4,7 @@ import {
   getUser,
   deleteUser,
   getAllUsers,
+  updateUser,
 } from '../controllers/user_controllers';
 import { asureValidate } from '../middleware/UserValidationAuth';
 
@@ -13,6 +14,6 @@ userRouter.post('/register', registerUser);
 userRouter.get('/getUser', [asureValidate], getUser);
 userRouter.get('/getAllUser', [asureValidate], getAllUsers);
 userRouter.delete('/deleteUser', [asureValidate], deleteUser);
-userRouter.patch('/updateUser' /*Anexar funcion*/);
+userRouter.patch('/updateUser/:id', [asureValidate], updateUser);
 
 export { userRouter };
