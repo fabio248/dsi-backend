@@ -74,15 +74,19 @@ const refreshToken = async (
 
 const sendEmail = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const user = req.body;
+
     await transporteEmail.sendMail({
-      from: 'Forgot password <veterinariamistum2013@gmail.com>', // sender address
-      to: 'jmge5833@gmail.com', // este es el correo del usuario debe variar
-      subject: 'Hello, you forgot password ✔', // Subject line
-      html: '<b color="blue" >Copie el siguiente código y digitelo en el formulario de la veterinaria: </b><a>INSERT BOT OF CODES HERE</a>', // html body
+      from: 'forgot password <veterinariamistum2013@gmail.com>', // sender address
+      to: 'fabioflores021@gmail.com', // este es el correo del usuario debe variar
+      subject:
+        'Hola, este es un correo que te brindará un código de verificación', // Subject line
+      html: '<b color="blue" text_align="center" >Copie el siguiente código y digitelo en el formulario de la veterinaria: </b><a>INSERT BOT OF CODES HERE</a>', // html body
     });
-    res
-      .status(200)
-      .send({ msg: 'Correo enviado, revise su buzón de entrada en gmail' });
+    res.status(200).send({
+      msg: 'Correo enviado, revise su buzón de entrada en gmail',
+      enviado: 'claudiamariaa2c@gmail.com',
+    });
   } catch (error) {
     res.status(500).send('Has been a error, please try again!');
     next(error);
