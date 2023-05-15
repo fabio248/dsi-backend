@@ -11,4 +11,8 @@ const config = {
   dbHost: process.env.DB_HOST,
 };
 
-export default config;
+const configJwt = {
+  jwt_secret_key: 'gR7cH9Svfj8J Le4c186Ghs48hheb3902 nh5DsA',
+};
+
+export { config, configJwt };
