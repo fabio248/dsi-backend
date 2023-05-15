@@ -1,9 +1,9 @@
 import express from 'express';
-import { login, refreshToken } from '../controllers/Auth_controller';
+import { login, refreshToken } from '../controllers/auth_controller';
 
-const AuthRouter = express.Router();
+const authRouter = express.Router();
 
-AuthRouter.post('/login', login);
-AuthRouter.post('/refreshToken', refreshToken);
+authRouter.post('/login', login);
+authRouter.post('/refreshToken', refreshToken);
 
-export { AuthRouter };
+export { authRouter };
