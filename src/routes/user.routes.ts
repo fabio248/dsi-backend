@@ -6,14 +6,40 @@ import {
   getAllUsers,
   updateUser,
 } from '../controllers/user_controllers';
-import { asureValidate } from '../middleware/UserValidationAuth';
+import { asureValidate } from '../middleware/auth.handler';
+import { validatorHandler } from '../middleware/validator.handler';
+import {
+  createUserSchema,
+  getUserSchemaByEmail,
+  getUserSchemaById,
+} from '../Schemas/user.schema';
 
 const userRouter = express.Router();
 
-userRouter.post('/register', registerUser);
-userRouter.get('/getUser', [asureValidate], getUser);
-userRouter.get('/getAllUser', [asureValidate], getAllUsers);
-userRouter.delete('/deleteUser', [asureValidate], deleteUser);
-userRouter.patch('/updateUser/:id', [asureValidate], updateUser);
+userRouter.post('/', validatorHandler(createUserSchema, 'body'), registerUser);
+userRouter.get(
+  '/:email',
+  validatorHandler(getUserSchemaByEmail, 'params'),
+  [asureValidate],
+  getUser
+);
+userRouter.get(
+  '/',
+  [asureValidate],
+  validatorHandler(getUserSchemaByEmail, 'params'),
+  getAllUsers
+);
+userRouter.delete(
+  '/:email',
+  validatorHandler(getUserSchemaByEmail, 'params'),
+  [asureValidate],
+  deleteUser
+);
+userRouter.patch(
+  '/:id',
+  validatorHandler(getUserSchemaById, 'params'),
+  [asureValidate],
+  updateUser
+);
 
 export { userRouter };

@@ -9,6 +9,6 @@ export class User extends Person {
   @Column()
   password: string;
 
-  @Column({ name: 'recorvery_token' })
+  @Column({ name: 'recorvery_token', nullable: true })
   recoveryToken: string;
 }
