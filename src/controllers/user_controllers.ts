@@ -10,24 +10,19 @@ const registerUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  try {
-    const data = req.body;
-    const user = await userService.create(data);
+  const data = req.body;
+  const user = await userService.create(data);
 
-    return res.status(200).json({
-      message: 'Created user successfully',
-      user,
-    });
-  } catch (error) {
-    res.status(500).send('Has been a error, please try again!');
-    next(error);
-  }
+  return res.status(201).json({
+    message: 'Created user successfully',
+    user,
+  });
 };
 
 //Obtiene un usuario en base al email
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email } = req.body;
+    const { email } = req.params;
     const userObtained = await userService.getUser(email);
 
     res.status(200).send({ Usuario: userObtained });
@@ -40,7 +35,7 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
 //funcion para eliminar un usuario en base a su email
 const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email } = req.body;
+    const { email } = req.params;
 
     await userService.deleteUser(email);
     res.status(200).send({ message: 'deleted user' });
