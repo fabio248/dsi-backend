@@ -7,7 +7,7 @@ import {
 } from '../utils/jwt';
 import { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { boolean } from 'joi';
+import { transporteEmail } from '../config/mailer';
 
 const userService = new UserService();
 
@@ -65,4 +65,25 @@ const refreshToken = async (
   }
 };
 
-export { login, refreshToken };
+const sendEmail = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const user = req.body;
+
+    await transporteEmail.sendMail({
+      from: 'forgot password <veterinariamistum2013@gmail.com>', // sender address
+      to: 'fabioflores021@gmail.com', // este es el correo del usuario debe variar
+      subject:
+        'Hola, este es un correo que te brindará un código de verificación', // Subject line
+      html: '<b color="blue" text_align="center" >Copie el siguiente código y digitelo en el formulario de la veterinaria: </b><a>INSERT BOT OF CODES HERE</a>', // html body
+    });
+    res.status(200).send({
+      msg: 'Correo enviado, revise su buzón de entrada en gmail',
+      enviado: 'claudiamariaa2c@gmail.com',
+    });
+  } catch (error) {
+    res.status(500).send('Has been a error, please try again!');
+    next(error);
+  }
+};
+
+export { login, refreshToken, sendEmail };
