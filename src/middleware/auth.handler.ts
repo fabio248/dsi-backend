@@ -16,7 +16,7 @@ export function asureValidate(req: any, res: Response, next: NextFunction) {
     const currentData = new Date().getTime();
 
     if (exp <= currentData) {
-      return res.status(408).send({ msg: 'The token has been finalizated' });
+      return res.status(408).json({ msg: 'The token has been finalizated' });
     }
 
     req.user = payload;

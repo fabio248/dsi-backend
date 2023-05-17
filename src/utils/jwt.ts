@@ -1,7 +1,7 @@
 import { configJwt } from '../config/config';
 import jwt from 'jsonwebtoken';
 
-function CreateAccessToken(email: any) {
+function CreateAccessToken(email: string) {
   const expiredToken = new Date();
   expiredToken.setHours(expiredToken.getHours() + 3);
 
@@ -14,7 +14,7 @@ function CreateAccessToken(email: any) {
   return jwt.sign(payload, configJwt.jwt_secret_key);
 }
 
-function RefreshAccessToken(email: any) {
+function RefreshAccessToken(email: string) {
   const expiredToken = new Date();
   expiredToken.setMonth(expiredToken.getMonth() + 1);
 
@@ -27,7 +27,7 @@ function RefreshAccessToken(email: any) {
   return jwt.sign(payload, configJwt.jwt_secret_key);
 }
 
-function decoderToken(token: any) {
+function decoderToken(token: string) {
   var decode = jwt.verify(token, configJwt.jwt_secret_key);
   return decode;
 }
