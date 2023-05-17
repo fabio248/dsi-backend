@@ -1,4 +1,4 @@
-import nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
 export const transporteEmail = nodemailer.createTransport({
   host: 'smtp.gmail.com',
