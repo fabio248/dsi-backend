@@ -7,23 +7,26 @@ import {
 } from '../utils/jwt';
 import { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { transporteEmail } from '../config/mailer';
+import { transporteEmail } from '../utils/mailer';
+import { AuthService } from '../service/auth.service';
+import boom from 'boom';
 
 const userService = new UserService();
+const authService = new AuthService(userService);
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
     const newEmail = email.toLowerCase();
 
-    const userObtained = await userService.getUser(newEmail);
+    const userObtained = await userService.getUserByEmail(newEmail);
 
     const isMatch: boolean = await bcrypt.compare(
       password,
       userObtained.password
     );
 
-    if (!isMatch) {
+    if (isMatch) {
       res.status(401).json({ message: 'Incorrect password or email' });
     }
     res.status(200).send({
@@ -31,7 +34,6 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       refreshToken: RefreshAccessToken(newEmail),
     });
   } catch (error) {
-    res.status(500).send('Has been a error, please try again');
     next(error);
   }
 };
@@ -50,7 +52,7 @@ const refreshToken = async (
       res.status(500).json({ msg: 'Has been a error, token Invalid' });
     }
 
-    const userExist = await userService.getUser(user_id);
+    const userExist = await userService.getUserByEmail(user_id);
 
     if (!userExist) {
       res.status(500).json({ msg: 'Has been a error, token Invalid' });
@@ -60,30 +62,34 @@ const refreshToken = async (
       accessToken: CreateAccessToken(user_id),
     });
   } catch (error) {
-    res.status(400).send({ msg: 'Has been a error, token Invalid!' });
     next(error);
   }
 };
 
-const sendEmail = async (req: Request, res: Response, next: NextFunction) => {
+const sendRecoveryMail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
-    const user = req.body;
-
-    await transporteEmail.sendMail({
-      from: 'forgot password <veterinariamistum2013@gmail.com>', // sender address
-      to: 'fabioflores021@gmail.com', // este es el correo del usuario debe variar
-      subject:
-        'Hola, este es un correo que te brindará un código de verificación', // Subject line
-      html: '<b color="blue" text_align="center" >Copie el siguiente código y digitelo en el formulario de la veterinaria: </b><a>INSERT BOT OF CODES HERE</a>', // html body
-    });
-    res.status(200).send({
-      msg: 'Correo enviado, revise su buzón de entrada en gmail',
-      enviado: 'claudiamariaa2c@gmail.com',
-    });
+    const { email } = req.body;
+    const rta = await authService.sendRecoveryPassword(email);
+    res.json(rta);
   } catch (error) {
-    res.status(500).send('Has been a error, please try again!');
     next(error);
   }
 };
-
-export { login, refreshToken, sendEmail };
+const changePassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { newPassword, token } = req.body;
+    const rta = await authService.changePassword(token, newPassword);
+    res.json(rta);
+  } catch (error) {
+    next(error);
+  }
+};
+export { login, refreshToken, sendRecoveryMail, changePassword };
