@@ -23,11 +23,10 @@ const registerUser = async (
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email } = req.params;
-    const userObtained = await userService.getUser(email);
+    const userObtained = await userService.getUserByEmail(email);
 
-    res.status(200).send({ Usuario: userObtained });
+    res.status(200).send({ data: userObtained });
   } catch (error) {
-    res.status(500).send('Has been a error, please try again!');
     next(error);
   }
 };
@@ -35,12 +34,10 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
 //funcion para eliminar un usuario en base a su email
 const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email } = req.params;
-
-    await userService.deleteUser(email);
-    res.status(200).send({ message: 'deleted user' });
+    const { id } = req.params;
+    await userService.deleteUser(+id);
+    res.status(200).send({ message: `deleted user with id: ${id}` });
   } catch (error) {
-    res.status(500).send('Has been a error, please try again!');
     next(error);
   }
 };
@@ -48,9 +45,8 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const allUsers = await userService.getAllUsers();
-    res.status(200).json({ Users: allUsers });
+    res.status(200).json({ data: allUsers });
   } catch (error) {
-    res.status(500).send('Has been a error, please try again!');
     next(error);
   }
 };
@@ -58,23 +54,11 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const newData = req.body;
-
-    if (newData.password) {
-      const salt = bcrypt.genSaltSync(10);
-      const hashPassword = bcrypt.hashSync(newData.password, salt);
-
-      newData.password = hashPassword;
-    } else {
-      delete newData.password;
-    }
-    const userObtained = await userService.updateUser(id, newData);
-    //es un test para verificar que los datos se han actualizado
-    //user: userObteined no debe existir en la etapa final
+    const userUpdated = await userService.updateUser(+id, newData);
     res
       .status(200)
-      .send({ msg: 'User updated successfully', user: userObtained });
+      .send({ message: 'User updated successfully', data: userUpdated });
   } catch (error) {
-    res.status(500).send('Has been a error, please try again!');
     next(error);
   }
 };

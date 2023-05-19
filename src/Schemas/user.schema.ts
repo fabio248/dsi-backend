@@ -3,7 +3,7 @@ import Joi from 'joi';
 const id = Joi.number();
 const firstName = Joi.string().min(3).max(30);
 const lastName = Joi.string().min(3).max(30);
-const email = Joi.string().email();
+const email = Joi.string();
 const password = Joi.string();
 const birthday = Joi.string().pattern(
   new RegExp('^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.](19|20)\\d\\d$')
