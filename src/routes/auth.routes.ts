@@ -1,10 +1,30 @@
 import express from 'express';
-import { login, refreshToken, sendEmail } from '../controllers/auth_controller';
+import {
+  changePassword,
+  login,
+  refreshToken,
+  sendRecoveryMail,
+} from '../controllers/auth_controller';
+import { validatorHandler } from '../middleware/validator.handler';
+import {
+  loginSchema,
+  sendMailRecoveryPasswordSchema,
+  updatePasswordRecoverySchema,
+} from '../Schemas/auth.schema';
 
 const authRouter = express.Router();
 
-authRouter.post('/login', login);
+authRouter.post('/login', validatorHandler(loginSchema, 'body'), login);
 authRouter.post('/refreshToken', refreshToken);
-authRouter.post('/forgotPassword', sendEmail);
+authRouter.post(
+  '/forgotPassword',
+  [validatorHandler(sendMailRecoveryPasswordSchema, 'body')],
+  sendRecoveryMail
+);
+authRouter.post(
+  '/change-password',
+  validatorHandler(updatePasswordRecoverySchema, 'body'),
+  changePassword
+);
 
 export { authRouter };
