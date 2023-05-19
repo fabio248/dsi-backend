@@ -1,4 +1,4 @@
-import { configJwt } from '../config/config';
+import { configJwt } from '../config';
 import jwt from 'jsonwebtoken';
 
 function CreateAccessToken(email: string) {
