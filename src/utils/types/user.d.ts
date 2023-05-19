@@ -5,6 +5,7 @@ export interface userEntry {
   birthday: Date;
   email: string;
   password: string;
+  recoveryToken?: string;
 }
 
 type userEntryWithoutSensitiveInfo = Omit<userEntry, 'password'>;
