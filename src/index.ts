@@ -1,7 +1,7 @@
 import { AppDataSource } from './data-source';
 import { Application } from 'express';
 import { createServer } from './utils/server';
-import { config } from './config/config';
+import { config } from './config';
 
 type Server = ReturnType<typeof app.listen>;
 

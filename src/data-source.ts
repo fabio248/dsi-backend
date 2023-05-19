@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { config } from './config/config';
+import { config } from './config';
 import { BaseEntity } from './db/entity/BaseEntity';
 import { Person } from './db/entity/Person';
 import { User } from './db/entity/User';

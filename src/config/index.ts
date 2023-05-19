@@ -9,10 +9,15 @@ const config = {
   dbPassword: process.env.DB_PASSWORD,
   dbName: process.env.DB_NAME,
   dbHost: process.env.DB_HOST,
+  smtpEmail: process.env.SMPT_EMAIL,
+  smtpPassword: process.env.SMPT_PASSWORD,
+  smtpHost: process.env.SMPT_HOST,
+  smtpPort: process.env.SMPT_PORT,
+  urlFront: process.env.URL_FRONT,
 };
 
 const configJwt = {
-  jwt_secret_key: 'gR7cH9Svfj8J Le4c186Ghs48hheb3902 nh5DsA',
+  jwt_secret_key: process.env.PASS_JWT,
 };
 
 export { config, configJwt };
