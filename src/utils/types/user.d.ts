@@ -8,4 +8,7 @@ export interface userEntry {
   recoveryToken?: string;
 }
 
-type userEntryWithoutSensitiveInfo = Omit<userEntry, 'password'>;
+type userEntryWithoutSensitiveInfo = Omit<
+  userEntry,
+  'password' | 'recoveryToken'
+>;
