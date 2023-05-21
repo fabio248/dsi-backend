@@ -1,9 +1,9 @@
-import { Response, NextFunction } from 'express';
+import { Response, NextFunction, Request } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
-import { decoderToken } from '../utils/jwt';
 import boom from 'boom';
+import { authService } from '../utils/dependencies/dependencies';
 
-export function asureValidate(req: any, res: Response, next: NextFunction) {
+export function asureValidate(req: Request, res: Response, next: NextFunction) {
   try {
     const { authorization } = req.headers;
     if (!authorization) {
@@ -11,8 +11,8 @@ export function asureValidate(req: any, res: Response, next: NextFunction) {
     }
     const token = authorization.replace('Bearer ', '');
 
-    const payload: JwtPayload | string = decoderToken(token);
-    const { exp } = payload as JwtPayload;
+    const payload: JwtPayload = authService.decoderToken(token);
+    const { exp } = payload;
 
     const currentData = new Date().getTime();
 
@@ -20,7 +20,7 @@ export function asureValidate(req: any, res: Response, next: NextFunction) {
       throw boom.clientTimeout('The token has been finalizated');
     }
 
-    req.user = payload;
+    req['user'] = payload;
 
     next();
   } catch (error) {

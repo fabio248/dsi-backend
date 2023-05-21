@@ -8,6 +8,7 @@ const password = Joi.string();
 const birthday = Joi.string().pattern(
   new RegExp('^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.](19|20)\\d\\d$')
 );
+const role = Joi.string().valid('client', 'admin');
 
 export const createUserSchema = Joi.object({
   firstName: firstName.required(),
@@ -15,6 +16,7 @@ export const createUserSchema = Joi.object({
   email: email.required(),
   password: password.required(),
   birthday: birthday.required(),
+  role,
 });
 
 export const updateUserSchema = Joi.object({
@@ -22,7 +24,8 @@ export const updateUserSchema = Joi.object({
   lastName,
   email,
   password,
-  birthDay: birthday,
+  birthday,
+  role,
 });
 
 export const getUserSchemaById = Joi.object({

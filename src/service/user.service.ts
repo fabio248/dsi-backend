@@ -3,14 +3,13 @@ import boom from 'boom';
 import { User } from '../db/entity/User';
 import { AppDataSource } from '../data-source';
 import { userEntry, userEntryWithoutSensitiveInfo } from '../utils/types/user';
-import { UpdateResult } from 'typeorm';
 
 export class UserService {
   private userRepository = AppDataSource.getRepository(User);
 
   async create(data: userEntry): Promise<userEntryWithoutSensitiveInfo> {
     const salt = bcrypt.genSaltSync(10);
-    const hashPassword: string = await bcrypt.hash(data.password, salt);
+    const hashPassword: string = await bcrypt.hash(data.password!, salt);
     const birthday = new Date(data.birthday);
     const newUser: userEntry = Object.assign(new User(), {
       ...data,
@@ -26,7 +25,9 @@ export class UserService {
   }
 
   async getUserByEmail(email: string): Promise<userEntry> {
-    const getuser: userEntry = await this.userRepository.findOneBy({ email });
+    const getuser: userEntry | null = await this.userRepository.findOneBy({
+      email,
+    });
 
     if (!getuser) {
       throw boom.notFound('User not found');
@@ -35,8 +36,10 @@ export class UserService {
     return getuser;
   }
 
-  async getUserById(id): Promise<User> {
-    const getuser = await this.userRepository.findOneBy({ id });
+  async getUserById(id: number): Promise<userEntry> {
+    const getuser: userEntry | null = await this.userRepository.findOneBy({
+      id,
+    });
 
     if (!getuser) {
       throw boom.badRequest('User not found');
@@ -53,9 +56,9 @@ export class UserService {
   }
 
   //obtener todos los usuarios
-  async getAllUsers(): Promise<Array<User>> {
-    const allUser: Array<User> = await this.userRepository.find();
-    allUser.map((user: User) => delete user.password);
+  async getAllUsers(): Promise<Array<userEntry>> {
+    const allUser: Array<userEntry> = await this.userRepository.find();
+    allUser.map((user: userEntry) => delete user.password);
     return allUser;
   }
 
@@ -76,7 +79,6 @@ export class UserService {
 
     const userUpdated = await this.getUserById(id);
     delete userUpdated.password;
-
     return userUpdated;
   }
 }
