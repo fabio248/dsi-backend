@@ -9,6 +9,10 @@ export const loginSchema = Joi.object({
   password: password.required(),
 });
 
+export const refreshTokenSchema = Joi.object({
+  token: token.required(),
+});
+
 export const updatePasswordRecoverySchema = Joi.object({
   newPassword: password.required(),
   token: token.required(),

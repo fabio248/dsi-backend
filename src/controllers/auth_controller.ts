@@ -1,19 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
-import { UserService } from '../service/user.service';
 import bcrypt from 'bcryptjs';
 import { authService, userService } from '../utils/dependencies/dependencies';
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
-    const newEmail = email.toLowerCase();
 
-    const user = await userService.getUserByEmail(newEmail);
-
-    const isMatch: boolean = await bcrypt.compare(password, user.password!);
-
-    if (isMatch) {
-      res.status(401).json({ message: 'Incorrect password or email' });
+    const user = await userService.getUserByEmail(email);
+    console.log(user);
+    const isMatch: boolean = await bcrypt.compare(password, user.password);
+    console.log(isMatch);
+    if (!isMatch) {
+      res.status(401).json({
+        error: 'Unauthorized',
+        message: 'Incorrect password or email',
+      });
     }
 
     res.status(200).send({
@@ -35,7 +36,7 @@ const refreshToken = async (
 
     const { token_type, user_id } = authService.decoderToken(token);
 
-    if (token_type !== 'refresh_Token') {
+    if (token_type !== 'refresh_token') {
       res.status(500).json({ msg: 'Has been a error, token Invalid' });
     }
 
@@ -46,7 +47,7 @@ const refreshToken = async (
     }
 
     res.status(200).json({
-      accessToken: authService.CreateAccessToken(user_id),
+      accessToken: authService.CreateAccessToken(userExist),
     });
   } catch (error) {
     next(error);
