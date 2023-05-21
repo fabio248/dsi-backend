@@ -8,19 +8,18 @@ export class UserService {
   private userRepository = AppDataSource.getRepository(User);
 
   async create(data: userEntry): Promise<userEntryWithoutSensitiveInfo> {
-    const salt = bcrypt.genSaltSync(10);
-    const hashPassword: string = await bcrypt.hash(data.password!, salt);
+    const hashPassword: string = await bcrypt.hash(data.password!, 10);
     const birthday = new Date(data.birthday);
     const newUser: userEntry = Object.assign(new User(), {
       ...data,
       password: hashPassword,
-      email: data.email.toLowerCase(),
       birthday,
     });
 
     await this.userRepository.save(newUser);
 
     delete newUser.password;
+
     return newUser;
   }
 
@@ -46,6 +45,7 @@ export class UserService {
     }
 
     delete getuser.password;
+
     return getuser;
   }
 
@@ -79,6 +79,7 @@ export class UserService {
 
     const userUpdated = await this.getUserById(id);
     delete userUpdated.password;
+
     return userUpdated;
   }
 }

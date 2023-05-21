@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserService } from '../service/user.service';
-import bcrypt from 'bcryptjs';
 
 const userService = new UserService();
 
@@ -22,8 +21,8 @@ const registerUser = async (
 //Obtiene un usuario en base al email
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email } = req.params;
-    const userObtained = await userService.getUserByEmail(email);
+    const { id } = req.params;
+    const userObtained = await userService.getUserById(+id);
 
     res.status(200).send({ data: userObtained });
   } catch (error) {

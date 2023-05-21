@@ -19,8 +19,8 @@ const userRouter = express.Router();
 
 userRouter.post('/', validatorHandler(createUserSchema, 'body'), registerUser);
 userRouter.get(
-  '/:email',
-  [validatorHandler(getUserSchemaByEmail, 'params'), asureValidate],
+  '/:id',
+  [validatorHandler(getUserSchemaById, 'params'), asureValidate],
   getUser
 );
 userRouter.get('/', [asureValidate], getAllUsers);

@@ -8,6 +8,7 @@ import {
 import { validatorHandler } from '../middleware/validator.handler';
 import {
   loginSchema,
+  refreshTokenSchema,
   sendMailRecoveryPasswordSchema,
   updatePasswordRecoverySchema,
 } from '../Schemas/auth.schema';
@@ -15,7 +16,11 @@ import {
 const authRouter = express.Router();
 
 authRouter.post('/login', validatorHandler(loginSchema, 'body'), login);
-authRouter.post('/refreshToken', refreshToken);
+authRouter.post(
+  '/refreshToken',
+  validatorHandler(refreshTokenSchema, 'body'),
+  refreshToken
+);
 authRouter.post(
   '/forgotPassword',
   [validatorHandler(sendMailRecoveryPasswordSchema, 'body')],
