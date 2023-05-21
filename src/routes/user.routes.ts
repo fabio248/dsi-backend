@@ -6,11 +6,10 @@ import {
   getAllUsers,
   updateUser,
 } from '../controllers/user_controllers';
-import { asureValidate } from '../middleware/auth.handler';
+import { asureValidate, checkerRole } from '../middleware/auth.handler';
 import { validatorHandler } from '../middleware/validator.handler';
 import {
   createUserSchema,
-  getUserSchemaByEmail,
   getUserSchemaById,
   updateUserSchema,
 } from '../Schemas/user.schema';
@@ -20,13 +19,25 @@ const userRouter = express.Router();
 userRouter.post('/', validatorHandler(createUserSchema, 'body'), registerUser);
 userRouter.get(
   '/:id',
-  [validatorHandler(getUserSchemaById, 'params'), asureValidate],
+  [
+    validatorHandler(getUserSchemaById, 'params'),
+    asureValidate,
+    checkerRole('client', 'admin'),
+  ],
   getUser
 );
-userRouter.get('/', [asureValidate], getAllUsers);
+userRouter.get(
+  '/',
+  [asureValidate, checkerRole('client', 'admin')],
+  getAllUsers
+);
 userRouter.delete(
   '/:id',
-  [validatorHandler(getUserSchemaById, 'params'), asureValidate],
+  [
+    validatorHandler(getUserSchemaById, 'params'),
+    asureValidate,
+    checkerRole('client', 'admin'),
+  ],
   deleteUser
 );
 userRouter.patch(
@@ -35,6 +46,7 @@ userRouter.patch(
     validatorHandler(getUserSchemaById, 'params'),
     validatorHandler(updateUserSchema, 'body'),
     asureValidate,
+    checkerRole('client', 'admin'),
   ],
   updateUser
 );

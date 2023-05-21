@@ -27,3 +27,15 @@ export function asureValidate(req: Request, res: Response, next: NextFunction) {
     next(error);
   }
 }
+
+export function checkerRole(...roles: string[]) {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    const user = req['user'];
+    console.log({ user });
+    if (roles.includes(user.role)) {
+      next();
+    } else {
+      next(boom.forbidden());
+    }
+  };
+}

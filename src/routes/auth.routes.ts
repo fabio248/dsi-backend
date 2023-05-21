@@ -12,13 +12,17 @@ import {
   sendMailRecoveryPasswordSchema,
   updatePasswordRecoverySchema,
 } from '../Schemas/auth.schema';
+import { checkerRole } from '../middleware/auth.handler';
 
 const authRouter = express.Router();
 
 authRouter.post('/login', validatorHandler(loginSchema, 'body'), login);
 authRouter.post(
   '/refreshToken',
-  validatorHandler(refreshTokenSchema, 'body'),
+  [
+    validatorHandler(refreshTokenSchema, 'body'),
+    checkerRole('client', 'admin'),
+  ],
   refreshToken
 );
 authRouter.post(
