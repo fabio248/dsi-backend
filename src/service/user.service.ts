@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import { hashSync } from 'bcryptjs';
 import boom from 'boom';
 import { User } from '../db/entity/User';
 import { AppDataSource } from '../data-source';
@@ -8,12 +8,15 @@ export class UserService {
   private userRepository = AppDataSource.getRepository(User);
 
   async create(data: userEntry): Promise<userEntryWithoutSensitiveInfo> {
-    const hashPassword: string = await bcrypt.hash(data.password!, 10);
-    const birthday = new Date(data.birthday);
+    const user = await this.userRepository.findOneBy({ email: data.email });
+    if (user) {
+      throw boom.badData('Email already taken');
+    }
+
     const newUser: userEntry = Object.assign(new User(), {
       ...data,
-      password: hashPassword,
-      birthday,
+      password: hashSync(data.password, 10),
+      birthday: new Date(data.birthday),
     });
 
     await this.userRepository.save(newUser);
@@ -70,9 +73,7 @@ export class UserService {
     await this.getUserById(id);
 
     if (data.password) {
-      const salt = bcrypt.genSaltSync(10);
-      const hashPassword = bcrypt.hashSync(data.password, salt);
-      data.password = hashPassword;
+      data.password = hashSync(data.password, 10);
     }
     //Update info
     await this.userRepository.update(id, data);
