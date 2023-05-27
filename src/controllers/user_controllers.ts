@@ -9,13 +9,17 @@ const registerUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const data = req.body;
-  const user = await userService.create(data);
+  try {
+    const data = req.body;
+    const user = await userService.create(data);
 
-  return res.status(201).json({
-    message: 'Created user successfully',
-    user,
-  });
+    return res.status(201).json({
+      message: 'Created user successfully',
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 //Obtiene un usuario en base al email
