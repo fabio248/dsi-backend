@@ -73,7 +73,7 @@ export class AuthService {
     expiredToken: Date
   ): string {
     const payload = {
-      sub: user.id,
+      identify: user.id,
       role: user.role,
       token_type: typeToken,
       user_id: user.email,
