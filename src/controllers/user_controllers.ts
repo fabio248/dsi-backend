@@ -70,4 +70,23 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { registerUser, getUser, deleteUser, getAllUsers, updateUser };
+const saveGoogleData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.status(200).send('google data online');
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  registerUser,
+  getUser,
+  deleteUser,
+  getAllUsers,
+  updateUser,
+  saveGoogleData,
+};

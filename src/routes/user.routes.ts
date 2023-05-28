@@ -5,6 +5,7 @@ import {
   deleteUser,
   getAllUsers,
   updateUser,
+  saveGoogleData,
 } from '../controllers/user_controllers';
 import { asureValidate, checkerRole } from '../middleware/auth.handler';
 import { validatorHandler } from '../middleware/validator.handler';
@@ -19,6 +20,7 @@ import { createPet } from '../controllers/pet_controller';
 const userRouter = express.Router();
 
 userRouter.post('/', validatorHandler(createUserSchema, 'body'), registerUser);
+userRouter.post('/saveData', saveGoogleData);
 userRouter.post(
   '/:id/pets',
   validatorHandler(createPetSchema, 'body'),
