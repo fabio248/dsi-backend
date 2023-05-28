@@ -56,14 +56,90 @@ export class AuthService {
     await this.userService.updateUser(user.id, { recoveryToken: token });
 
     const mail = {
+      maxAllowedSize: 10 * 1024 * 1024,
       from: `${config.smtpEmail}`, // sender address
       to: `${user.email}`, // list of receivers
-      subject: 'Email para cambio de contraseña', // Subject line
-      html: `<p>Hola,</p>
-            <p>Este correo es para cambiar tu contraseña.</p>
-            <b>Ingresa a este link para cambiar la contraseña => ${link} </b>
-            <p>Este link expira en 15 minutos</p>
-            <p>El equipo de Veterinaria Mitsun.</p>`, // html body
+      subject: 'Correo para el cambio de contraseña', // Subject line
+      html: `<html>
+                <head>  
+                   <style>
+                    body {
+                      margin: 0;
+                      padding: 0;
+                      font-family: Arial, sans-serif;
+                      background-color: #f5f5f5;
+                      width:200px
+                    }
+
+                    h2 {
+                      margin: 0;
+                      font-size: 20px;
+                      color: #5499C7;
+                    }
+                    h1 {
+                      margin: 0;
+                      font-size: 18px;
+                      color: #5499C7;
+                    }
+
+                    p {
+                      text-align: center;
+                      color: #5499C7;
+                      display: inline-block;
+                      border-bottom: 1px solid black;
+                    }
+                    .content {
+                      text-align: center;
+                      padding: 20px;
+                      background-color: #ffffff;
+                      color: #909497;
+                    }
+                    .footer {
+                      padding: 20px;
+                      background-color: #333333;
+                      color: #ffffff;
+                      text-align: center;
+                    }
+                    .container {
+                      border-radius: 5px;
+                      max-width: 700px;
+                      margin: 1px auto;
+                      padding: 20px;
+                      background-color: #95A5A6;
+                      
+                    }
+                    .header {
+                      background-color: #333333;
+                      padding: 20px;
+                      color: #ffffff;
+                      text-align: center;
+                      height:150px
+                    }
+                    dl {
+                      text-align: center;
+                    }
+        
+                  </style>  
+                </head> 
+              <body>
+                 <div class="container">
+                      <div class="header">
+                          <h2>Hola, Gracias por utilizar el servicio de recuperación de contraseña de Clínica Veterinaria Mistum</h2>
+                          <p>Este correo es para cambiar tu contraseña.</p>
+                        </div>
+                      <div class="content">
+                        <dl>
+                          <dt text-align="center">Ingresa a este link para cambiar la contraseña:</dt>
+                          <dt><a href="${link}">URL DE ACCESO</a></dt>
+                          <p>¡¡Este link expirará en 15 minutos!!</p>
+                        </dl>  
+                       </div>
+                          <div class="footer">
+                             <h1>Saludos cordiales: <br>El equipo de Clínica Veterinaria Mistum.</h1>
+                          </div>
+                 </div>
+             </body>
+          </html>`, // html body
     };
     const rta = await this.sendMail(mail);
     return rta;
