@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 const id = Joi.number();
 const name = Joi.string();
-const race = Joi.string();
+const raza = Joi.string();
 const color = Joi.string();
 const weight = Joi.number().precision(2);
 const isHaveTatto = Joi.boolean();
@@ -11,12 +11,12 @@ const birthday = Joi.string().pattern(
 );
 const gender = Joi.string().valid('masculino', 'femenino');
 const pedigree = Joi.boolean();
-const species = Joi.string();
+const idSpecies = Joi.number();
 
 export const createPetSchema = Joi.object({
   name: name.required(),
-  species: species.required(),
-  race: race.required(),
+  species: idSpecies.required(),
+  raza: raza.required(),
   color: color.required(),
   weight: weight.required(),
   isHaveTatto: isHaveTatto.required(),

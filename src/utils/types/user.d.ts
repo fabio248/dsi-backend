@@ -1,4 +1,4 @@
-import { UserRole } from '../../db/entity/User';
+import { UserRole } from '../../db/entity/User.entity';
 
 export interface userEntry {
   id: number;

@@ -1,6 +1,6 @@
 import { hashSync } from 'bcryptjs';
 import boom from 'boom';
-import { User } from '../db/entity/User';
+import { User } from '../db/entity/User.entity';
 import { AppDataSource } from '../data-source';
 import { userEntry, userEntryWithoutSensitiveInfo } from '../utils/types/user';
 
@@ -9,6 +9,7 @@ export class UserService {
 
   async create(data: userEntry): Promise<userEntryWithoutSensitiveInfo> {
     const user = await this.userRepository.findOneBy({ email: data.email });
+
     if (user) {
       throw boom.badData('Email already taken');
     }
@@ -39,8 +40,11 @@ export class UserService {
   }
 
   async getUserById(id: number): Promise<userEntry> {
-    const getuser: userEntry | null = await this.userRepository.findOneBy({
-      id,
+    const getuser: userEntry | null = await this.userRepository.findOne({
+      where: { id },
+      relations: {
+        pet: true,
+      },
     });
 
     if (!getuser) {

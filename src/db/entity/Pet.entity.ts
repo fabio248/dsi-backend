@@ -1,6 +1,7 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
-import { User } from './User';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { User } from './User.entity';
 import { BaseEntity } from './BaseEntity';
+import { Especie } from './Especie.entity';
 
 export enum Gender {
   M = 'masculino',
@@ -35,6 +36,10 @@ export class Pet extends BaseEntity {
   @Column()
   birthday: Date;
 
+  @ManyToOne(() => Especie, (specie) => specie.pet)
+  specie: Especie;
+
   @ManyToOne(() => User, (user) => user.pet)
+  @JoinColumn()
   user: User;
 }

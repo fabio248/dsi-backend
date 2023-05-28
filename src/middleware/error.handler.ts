@@ -23,9 +23,7 @@ export function ormErrorHandler(
   res: Response,
   _next: NextFunction
 ) {
-  res
-    .status(500)
-    .json({ name: `database error: ${error.name}`, message: error });
+  res.status(500).json({ name: `${error.name}`, message: error.stack });
 }
 export function errorHandler(
   error: TypeError,

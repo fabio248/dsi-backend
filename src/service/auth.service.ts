@@ -29,14 +29,16 @@ export class AuthService {
   async changePassword(token: string, newPassword: string) {
     const payload = jwt.verify(token, config.jwt_secret_key);
     const user = await this.userService.getUserById(+payload.sub);
+
     if (user.recoveryToken !== token) {
       throw boom.unauthorized();
     }
-    const hash = await bcrypt.hash(newPassword, 10);
+
     await this.userService.updateUser(user.id, {
-      password: hash,
+      password: newPassword,
       recoveryToken: undefined,
     });
+
     return { message: 'Password changed' };
   }
   async sendRecoveryPassword(email: string) {

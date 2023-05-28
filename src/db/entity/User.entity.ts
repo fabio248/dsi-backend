@@ -1,6 +1,6 @@
 import { Entity, Column, OneToMany } from 'typeorm';
-import { Person } from './Person';
-import { Pet } from './Pet';
+import { Person } from './Person.entity';
+import { Pet } from './Pet.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -11,6 +11,21 @@ export enum UserRole {
 export class User extends Person {
   @Column({ unique: true })
   email: string;
+
+  @Column({ name: 'first_name', nullable: true })
+  firstName: string;
+
+  @Column({ name: 'last_name', nullable: true })
+  lastName: string;
+
+  @Column({ nullable: true })
+  phone: string;
+
+  @Column({ nullable: true })
+  direction: string;
+
+  @Column({ length: 10, nullable: true })
+  dui: string;
 
   @Column()
   password: string;

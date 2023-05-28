@@ -45,7 +45,11 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+const getAllUsers = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const allUsers = await userService.getAllUsers();
     res.status(200).json({ data: allUsers });

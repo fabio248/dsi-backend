@@ -30,8 +30,12 @@ export function asureValidate(req: Request, res: Response, next: NextFunction) {
 
 export function checkerRole(...roles: string[]) {
   return (req: Request, _res: Response, next: NextFunction) => {
-    const user = req['user'];
-    if (roles.includes(user.role)) {
+    const { authorization } = req.headers;
+    const token = authorization.replace('Bearer ', '');
+
+    const payload: JwtPayload = authService.decoderToken(token);
+
+    if (roles.includes(payload.role)) {
       next();
     } else {
       next(boom.forbidden());

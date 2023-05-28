@@ -7,16 +7,14 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
 
     const user = await userService.getUserByEmail(email);
-    console.log(user);
     const isMatch: boolean = await bcrypt.compare(password, user.password);
-    console.log(isMatch);
+
     if (!isMatch) {
       res.status(401).json({
         error: 'Unauthorized',
         message: 'Incorrect password or email',
       });
     }
-
     res.status(200).send({
       accessToken: authService.CreateAccessToken(user),
       refreshToken: authService.RefreshAccessToken(user),

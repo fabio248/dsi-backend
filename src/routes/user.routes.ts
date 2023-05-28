@@ -13,10 +13,19 @@ import {
   getUserSchemaById,
   updateUserSchema,
 } from '../Schemas/user.schema';
+import { createPetSchema } from '../Schemas/pet.schema';
+import { createPet } from '../controllers/pet_controller';
 
 const userRouter = express.Router();
 
 userRouter.post('/', validatorHandler(createUserSchema, 'body'), registerUser);
+userRouter.post(
+  '/:id/pets',
+  validatorHandler(createPetSchema, 'body'),
+  asureValidate,
+  checkerRole('admin'),
+  createPet
+);
 userRouter.get(
   '/:id',
   [

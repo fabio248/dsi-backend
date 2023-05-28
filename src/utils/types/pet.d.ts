@@ -1,4 +1,4 @@
-import { Gender } from '../../db/entity/Pet';
+import { Gender } from '../../db/entity/Pet.entity';
 
 export interface createPetEntry {
   name: string;
