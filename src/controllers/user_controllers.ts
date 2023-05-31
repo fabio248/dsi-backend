@@ -70,13 +70,18 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const saveGoogleData = async (
+const sendEmailCalendar = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    res.status(200).send('google data online');
+    const { email } = req.body;
+
+    const response = await userService.sendEmailEventCalendar(email);
+    res
+      .status(200)
+      .json({ Confirmated: 'email send successfully', message: response });
   } catch (error) {
     next(error);
   }
@@ -88,5 +93,5 @@ export {
   deleteUser,
   getAllUsers,
   updateUser,
-  saveGoogleData,
+  sendEmailCalendar,
 };

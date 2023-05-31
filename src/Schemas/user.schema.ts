@@ -52,3 +52,7 @@ export const getUserSchemaById = Joi.object({
 export const getUserSchemaByEmail = Joi.object({
   email: email.required(),
 });
+
+export const sendEmailCalendarConfirmation = Joi.object({
+  email: email.required(),
+});

@@ -78,4 +78,22 @@ const changePassword = async (
     next(error);
   }
 };
-export { login, refreshToken, sendRecoveryMail, changePassword };
+
+const saveGoogleData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  login,
+  refreshToken,
+  sendRecoveryMail,
+  changePassword,
+  saveGoogleData,
+};

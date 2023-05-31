@@ -4,6 +4,7 @@ import {
   login,
   refreshToken,
   sendRecoveryMail,
+  saveGoogleData,
 } from '../controllers/auth_controller';
 import { validatorHandler } from '../middleware/validator.handler';
 import {
@@ -17,6 +18,7 @@ import { checkerRole } from '../middleware/auth.handler';
 const authRouter = express.Router();
 
 authRouter.post('/login', validatorHandler(loginSchema, 'body'), login);
+authRouter.post('/saveData', saveGoogleData);
 authRouter.post(
   '/refreshToken',
   [

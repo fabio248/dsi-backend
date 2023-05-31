@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import boom from 'boom';
 import bcrypt from 'bcryptjs';
 import { config } from '../config';
@@ -95,7 +95,7 @@ export class AuthService {
                       color: #909497;
                     }
                     .footer {
-                      padding: 20px;
+                      padding: 10px;
                       background-color: #333333;
                       color: #ffffff;
                       text-align: center;
@@ -106,7 +106,7 @@ export class AuthService {
                       margin: 1px auto;
                       padding: 20px;
                       background-color: #95A5A6;
-                      
+                      max-height:700px;
                     }
                     .header {
                       background-color: #333333;
@@ -135,7 +135,7 @@ export class AuthService {
                         </dl>  
                        </div>
                           <div class="footer">
-                             <h1>Saludos cordiales: <br>El equipo de Clínica Veterinaria Mistum.</h1>
+                             <h1>Saludos cordiales les desea: <br>El equipo de Clínica Veterinaria Mistum.</h1>
                           </div>
                  </div>
              </body>
