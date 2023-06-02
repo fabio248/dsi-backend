@@ -1,7 +1,6 @@
 import nodemailer from 'nodemailer';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import boom from 'boom';
-import bcrypt from 'bcryptjs';
 import { config } from '../config';
 import { UserService } from './user.service';
 import { mailBody } from '../utils/types/mailer';
@@ -165,7 +164,7 @@ export class AuthService {
 
   CreateAccessToken(user: userEntry): string {
     const expiredToken = new Date();
-    expiredToken.setHours(expiredToken.getHours() + 3);
+    expiredToken.setHours(expiredToken.getHours() + 6);
 
     const token = this.signToken(user, 'access_token', expiredToken);
 
