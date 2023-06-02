@@ -40,6 +40,13 @@ export class UserService {
 
     return getuser;
   }
+  async getUserByEmailGoogle(email: string): Promise<userEntry> {
+    const getuser: userEntry | null = await this.userRepository.findOneBy({
+      email,
+    });
+
+    return getuser;
+  }
 
   async getUserById(id: number): Promise<userEntry> {
     const getuser: userEntry | null = await this.userRepository.findOne({
