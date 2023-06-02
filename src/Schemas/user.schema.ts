@@ -12,7 +12,7 @@ const birthday = Joi.string()
     )
   )
   .error(new Error("mal formato de fecha debe ser: 'mm/dd/aaaa'"));
-const role = Joi.string().valid('client', 'admin');
+const role = Joi.string().valid('client', 'admin', 'authenticated');
 const direction = Joi.string();
 const dui = Joi.string()
   .min(10)
@@ -26,7 +26,7 @@ export const createUserSchema = Joi.object({
   lastName: lastName.required(),
   email: email.required(),
   password: password.required(),
-  birthday: birthday.required(),
+  birthday,
   role,
   direction,
   dui,
@@ -44,6 +44,17 @@ export const updateUserSchema = Joi.object({
   dui,
   phone,
 }).min(1);
+
+//temporal schema
+export const googleUserSchema = Joi.object({
+  firstName: firstName.required(),
+  lastName: lastName.required(),
+  email: email.required(),
+  password,
+  birthday,
+  role,
+  phone,
+});
 
 export const getUserSchemaById = Joi.object({
   id: id.required(),

@@ -85,6 +85,23 @@ const saveGoogleData = async (
   next: NextFunction
 ) => {
   try {
+    const data = req.body;
+    const response = await userService.getUserByEmailGoogle(data.email);
+
+    if (response == null) {
+      let aux = 'client';
+      data.role = aux;
+      const registerUser = await userService.create(data);
+      const accessToken = await authService.CreateAccessToken(registerUser);
+      const refresh_token = await authService.RefreshAccessToken(registerUser);
+
+      res.status(200).json({ accessToken, refresh_token, registerUser });
+    } else if (response.email == data.email) {
+      const accessToken = await authService.CreateAccessToken(response);
+      const refresh_token = await authService.RefreshAccessToken(response);
+
+      res.status(200).json({ accessToken, refresh_token });
+    }
   } catch (error) {
     next(error);
   }

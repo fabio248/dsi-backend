@@ -14,6 +14,7 @@ import {
   updatePasswordRecoverySchema,
 } from '../Schemas/auth.schema';
 import { checkerRole } from '../middleware/auth.handler';
+import { googleUserSchema } from '../Schemas/user.schema';
 
 const authRouter = express.Router();
 
