@@ -52,7 +52,7 @@ export class AuthService {
     const token = jwt.sign(payload, config.jwt_secret_key, {
       expiresIn: '15m',
     });
-    const link = `${config.urlFront}/cambiar-contraseña?token=${token}`;
+    const link = `${config.urlFront}/changePassword?token=${token}`;
     await this.userService.updateUser(user.id, { recoveryToken: token });
 
     const mail = {
