@@ -95,7 +95,7 @@ const saveGoogleData = async (
       const accessToken = await authService.CreateAccessToken(registerUser);
       const refresh_token = await authService.RefreshAccessToken(registerUser);
 
-      res.status(200).json({ accessToken, refresh_token, registerUser });
+      res.status(200).json({ accessToken, refresh_token });
     } else if (response.email == data.email) {
       const accessToken = await authService.CreateAccessToken(response);
       const refresh_token = await authService.RefreshAccessToken(response);
