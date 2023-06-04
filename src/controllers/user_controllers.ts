@@ -25,8 +25,8 @@ const registerUser = async (
 //Obtiene un usuario en base al email
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
-    const userObtained = await userService.getUserById(+id);
+    const { userId } = req.params;
+    const userObtained = await userService.getUserById(+userId);
 
     res.status(200).send({ data: userObtained });
   } catch (error) {
@@ -37,9 +37,9 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
 //funcion para eliminar un usuario en base a su email
 const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
-    await userService.deleteUser(+id);
-    res.status(200).send({ message: `deleted user with id: ${id}` });
+    const { userId } = req.params;
+    await userService.deleteUser(+userId);
+    res.status(200).send({ message: `deleted user with id: ${userId}` });
   } catch (error) {
     next(error);
   }
@@ -59,9 +59,9 @@ const getAllUsers = async (
 };
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const { userId } = req.params;
     const newData = req.body;
-    const userUpdated = await userService.updateUser(+id, newData);
+    const userUpdated = await userService.updateUser(+userId, newData);
     res
       .status(200)
       .send({ message: 'User updated successfully', data: userUpdated });

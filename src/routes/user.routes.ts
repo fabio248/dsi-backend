@@ -28,14 +28,15 @@ userRouter.post(
   sendEmailCalendar
 );
 userRouter.post(
-  '/:id/pets',
+  '/:userId/pets',
+  validatorHandler(getUserSchemaById, 'params'),
   validatorHandler(createPetSchema, 'body'),
   asureValidate,
   checkerRole('admin'),
   createPet
 );
 userRouter.get(
-  '/:id',
+  '/:userId',
   [
     validatorHandler(getUserSchemaById, 'params'),
     asureValidate,
@@ -49,7 +50,7 @@ userRouter.get(
   getAllUsers
 );
 userRouter.delete(
-  '/:id',
+  '/:userId',
   [
     validatorHandler(getUserSchemaById, 'params'),
     asureValidate,
@@ -58,7 +59,7 @@ userRouter.delete(
   deleteUser
 );
 userRouter.patch(
-  '/:id',
+  '/:userId',
   [
     validatorHandler(getUserSchemaById, 'params'),
     validatorHandler(updateUserSchema, 'body'),

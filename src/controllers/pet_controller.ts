@@ -9,8 +9,8 @@ export async function createPet(
 ) {
   try {
     const input = req.body;
-    const { id } = req.params;
-    const newPet = await petService.create(input, parseInt(id));
+    const { userId } = req.params;
+    const newPet = await petService.create(input, parseInt(userId));
     res.status(201).json({ message: 'pet created', data: newPet });
   } catch (error) {
     next(error);

@@ -57,7 +57,7 @@ export const googleUserSchema = Joi.object({
 });
 
 export const getUserSchemaById = Joi.object({
-  id: id.required(),
+  userId: id.required(),
 });
 
 export const getUserSchemaByEmail = Joi.object({
