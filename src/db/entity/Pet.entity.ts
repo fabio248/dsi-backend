@@ -16,9 +16,6 @@ export class Pet extends BaseEntity {
   gender: Gender;
 
   @Column()
-  species: string;
-
-  @Column()
   raza: string;
 
   @Column()

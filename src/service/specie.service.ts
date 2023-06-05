@@ -1,3 +1,4 @@
+import { notFound } from '@hapi/boom';
 import { AppDataSource } from '../data-source';
 import { Especie } from '../db/entity/Especie.entity';
 
@@ -17,5 +18,17 @@ export class SpecieService {
     });
 
     return species;
+  }
+
+  async findOne(specieId: number): Promise<Especie> {
+    const specie = await this.specieRepository.findOne({
+      where: { id: specieId },
+    });
+
+    if (!specie) {
+      throw notFound('specie not found');
+    }
+
+    return specie;
   }
 }

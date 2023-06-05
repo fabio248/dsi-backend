@@ -2,7 +2,7 @@ import { Gender } from '../../db/entity/Pet.entity';
 
 export interface createPetEntry {
   name: string;
-  species: string;
+  specie: string;
   race: string;
   color: string;
   weight: number;

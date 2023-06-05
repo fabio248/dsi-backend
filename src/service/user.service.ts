@@ -1,13 +1,8 @@
-import { createUserWithPetSchema } from './../Schemas/user.schema';
 import { hashSync } from 'bcryptjs';
 import boom from 'boom';
 import { User } from '../db/entity/User.entity';
 import { AppDataSource } from '../data-source';
-import {
-  userEntry,
-  userEntryWithoutSensitiveInfo,
-  userWhitPetEntry,
-} from '../utils/types/user';
+import { userEntry, userEntryWithoutSensitiveInfo } from '../utils/types/user';
 import { config } from '../config';
 import { mailBody } from '../utils/types/mailer';
 import nodemailer from 'nodemailer';

@@ -11,11 +11,11 @@ const birthday = Joi.string().pattern(
 );
 const gender = Joi.string().valid('masculino', 'femenino');
 const pedigree = Joi.boolean();
-const idSpecies = Joi.number();
+const specieId = Joi.number();
 
 export const createPetSchema = Joi.object({
   name: name.required(),
-  species: idSpecies.required(),
+  specie: specieId.required(),
   raza: raza.required(),
   color: color.required(),
   weight: weight.required(),
@@ -23,4 +23,20 @@ export const createPetSchema = Joi.object({
   birthday: birthday.required(),
   gender: gender.required(),
   pedigree: pedigree.required(),
+});
+
+export const updatePetShema = Joi.object({
+  name,
+  specie: specieId,
+  raza,
+  color,
+  weight,
+  isHaveTatto,
+  birthday,
+  gender,
+  pedigree,
+}).min(1);
+
+export const getPetSchema = Joi.object({
+  petId: id.required(),
 });

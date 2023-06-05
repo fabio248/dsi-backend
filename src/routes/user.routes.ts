@@ -7,7 +7,7 @@ import {
   updateUser,
   sendEmailCalendar,
   createUserWithPet,
-} from '../controllers/user_controllers';
+} from '../controllers/user.controllers';
 import { asureValidate, checkerRole } from '../middleware/auth.handler';
 import { validatorHandler } from '../middleware/validator.handler';
 import {
