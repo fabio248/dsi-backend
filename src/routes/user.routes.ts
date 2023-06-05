@@ -6,6 +6,7 @@ import {
   getAllUsers,
   updateUser,
   sendEmailCalendar,
+  createUserWithPet,
 } from '../controllers/user_controllers';
 import { asureValidate, checkerRole } from '../middleware/auth.handler';
 import { validatorHandler } from '../middleware/validator.handler';
@@ -14,6 +15,7 @@ import {
   getUserSchemaById,
   updateUserSchema,
   sendEmailCalendarConfirmation,
+  createUserWithPetSchema,
 } from '../Schemas/user.schema';
 import { createPetSchema } from '../Schemas/pet.schema';
 import { createPet } from '../controllers/pet_controller';
@@ -21,12 +23,24 @@ import { createPet } from '../controllers/pet_controller';
 const userRouter = express.Router();
 
 userRouter.post('/', validatorHandler(createUserSchema, 'body'), registerUser);
+
+userRouter.post(
+  '/pets',
+  [
+    asureValidate,
+    checkerRole('client', 'admin'),
+    validatorHandler(createUserWithPetSchema, 'body'),
+  ],
+  createUserWithPet
+);
+
 userRouter.post(
   '/sendEmail',
   validatorHandler(sendEmailCalendarConfirmation, 'body'),
   asureValidate,
   sendEmailCalendar
 );
+
 userRouter.post(
   '/:userId/pets',
   validatorHandler(getUserSchemaById, 'params'),
@@ -35,6 +49,7 @@ userRouter.post(
   checkerRole('admin'),
   createPet
 );
+
 userRouter.get(
   '/:userId',
   [
@@ -44,11 +59,13 @@ userRouter.get(
   ],
   getUser
 );
+
 userRouter.get(
   '/',
   [asureValidate, checkerRole('client', 'admin')],
   getAllUsers
 );
+
 userRouter.delete(
   '/:userId',
   [
@@ -58,6 +75,7 @@ userRouter.delete(
   ],
   deleteUser
 );
+
 userRouter.patch(
   '/:userId',
   [

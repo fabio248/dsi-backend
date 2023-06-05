@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { createPetSchema } from './pet.schema';
 
 const id = Joi.number();
 const firstName = Joi.string().min(3).max(30);
@@ -31,6 +32,19 @@ export const createUserSchema = Joi.object({
   direction,
   dui,
   phone,
+});
+
+export const createUserWithPetSchema = Joi.object({
+  firstName: firstName.required(),
+  lastName: lastName.required(),
+  email: email.required(),
+  password: password.required(),
+  birthday,
+  role,
+  direction,
+  dui,
+  phone,
+  pets: createPetSchema.required(),
 });
 
 export const updateUserSchema = Joi.object({

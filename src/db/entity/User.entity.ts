@@ -36,6 +36,6 @@ export class User extends Person {
   @Column({ type: 'enum', enum: UserRole, default: UserRole.CLIENT })
   role: UserRole;
 
-  @OneToMany(() => Pet, (pet) => pet.user)
+  @OneToMany(() => Pet, (pet) => pet.user, { cascade: true })
   pet: Pet[];
 }

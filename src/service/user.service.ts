@@ -1,8 +1,13 @@
+import { createUserWithPetSchema } from './../Schemas/user.schema';
 import { hashSync } from 'bcryptjs';
 import boom from 'boom';
 import { User } from '../db/entity/User.entity';
 import { AppDataSource } from '../data-source';
-import { userEntry, userEntryWithoutSensitiveInfo } from '../utils/types/user';
+import {
+  userEntry,
+  userEntryWithoutSensitiveInfo,
+  userWhitPetEntry,
+} from '../utils/types/user';
 import { config } from '../config';
 import { mailBody } from '../utils/types/mailer';
 import nodemailer from 'nodemailer';
@@ -27,6 +32,18 @@ export class UserService {
     delete newUser.password;
 
     return newUser;
+  }
+
+  async createUserWithPet(data: userWhitPetEntry) {
+    const user = await this.userRepository.findOneBy({ email: data.email });
+
+    if (user) {
+      throw boom.badData('Email already taken');
+    }
+
+    const res = await this.userRepository.save({ ...data });
+
+    return res;
   }
 
   async getUserByEmail(email: string): Promise<userEntry> {

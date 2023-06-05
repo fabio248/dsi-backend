@@ -87,6 +87,22 @@ const sendEmailCalendar = async (
   }
 };
 
+export const createUserWithPet = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const input = req.body;
+
+    const response = await userService.createUserWithPet(input);
+
+    res.status(201).json({ message: 'entities created', data: response });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export {
   registerUser,
   getUser,
