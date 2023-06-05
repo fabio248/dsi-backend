@@ -34,18 +34,6 @@ export class UserService {
     return newUser;
   }
 
-  async createUserWithPet(data: userWhitPetEntry) {
-    const user = await this.userRepository.findOneBy({ email: data.email });
-
-    if (user) {
-      throw boom.badData('Email already taken');
-    }
-
-    const res = await this.userRepository.save({ ...data });
-
-    return res;
-  }
-
   async getUserByEmail(email: string): Promise<userEntry> {
     const getuser: userEntry | null = await this.userRepository.findOneBy({
       email,

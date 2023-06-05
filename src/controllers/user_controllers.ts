@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { UserService } from '../service/user.service';
+import { petService } from '../utils/dependencies/dependencies';
 
 const userService = new UserService();
 
@@ -94,10 +95,14 @@ export const createUserWithPet = async (
 ) => {
   try {
     const input = req.body;
+    const { pet: inputPet } = input;
+    const user = await userService.create({
+      ...input,
+      pet: undefined,
+    });
+    const pet = await petService.create(inputPet, user.id);
 
-    const response = await userService.createUserWithPet(input);
-
-    res.status(201).json({ message: 'entities created', data: response });
+    res.status(201).json({ message: 'entities created', data: [user, pet] });
   } catch (error) {
     next(error);
   }

@@ -44,7 +44,7 @@ export const createUserWithPetSchema = Joi.object({
   direction,
   dui,
   phone,
-  pets: createPetSchema.required(),
+  pet: createPetSchema.required(),
 });
 
 export const updateUserSchema = Joi.object({

@@ -18,7 +18,7 @@ import {
   createUserWithPetSchema,
 } from '../Schemas/user.schema';
 import { createPetSchema } from '../Schemas/pet.schema';
-import { createPet } from '../controllers/pet_controller';
+import { createPet } from '../controllers/pet.controller';
 
 const userRouter = express.Router();
 
