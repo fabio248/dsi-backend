@@ -15,6 +15,6 @@ export abstract class Person extends BaseEntity {
   @Column({ name: 'last_name' })
   lastName: string;
 
-  @Column()
+  @Column({ nullable: true })
   birthday: Date;
 }
