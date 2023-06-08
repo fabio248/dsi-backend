@@ -89,8 +89,6 @@ const saveGoogleData = async (
     const response = await userService.getUserByEmailGoogle(data.email);
 
     if (response == null) {
-      let aux = 'client';
-      data.role = aux;
       const registerUser = await userService.create(data);
       const accessToken = await authService.CreateAccessToken(registerUser);
       const refresh_token = await authService.RefreshAccessToken(registerUser);
