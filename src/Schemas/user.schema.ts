@@ -13,14 +13,14 @@ const birthday = Joi.string()
     )
   )
   .error(new Error("mal formato de fecha debe ser: 'mm/dd/aaaa'"));
-const role = Joi.string().valid('client', 'admin', 'authenticated');
+const role = Joi.string().valid('client', 'admin');
 const direction = Joi.string();
 const dui = Joi.string()
   .min(10)
   .max(10)
   .regex(/^\d{8}-\d$/)
   .error(new Error('mal formato debe ser: 00000000-0'));
-const phone = Joi.string().min(8).max(8);
+const phone = Joi.string().min(9).max(9);
 
 export const createUserSchema = Joi.object({
   firstName: firstName.required(),

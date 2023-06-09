@@ -80,7 +80,7 @@ userRouter.patch(
   '/:userId',
   [
     validatorHandler(getUserSchemaById, 'params'),
-    validatorHandler(updateUserSchema, 'body'),
+    // validatorHandler(updateUserSchema, 'body'),
     asureValidate,
     checkerRole('client', 'admin'),
   ],
