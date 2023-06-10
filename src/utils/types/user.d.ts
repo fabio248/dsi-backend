@@ -10,17 +10,10 @@ export interface userEntry {
   password?: string;
   recoveryToken?: string;
   role: UserRole;
+  isActive: boolean;
 }
 
-export interface userWhitPetEntry {
-  id: number;
-  firstName: string;
-  lastName: string;
-  birthday?: Date;
-  email: string;
-  password?: string;
-  recoveryToken?: string;
-  role: UserRole;
+export interface userWhitPetEntry extends userEntry {
   pets: createPetEntry;
 }
 

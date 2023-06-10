@@ -7,6 +7,7 @@ import { config } from '../config';
 import { mailBody } from '../utils/types/mailer';
 import nodemailer from 'nodemailer';
 export class UserService {
+  private INACTIVE_USER = false;
   private userRepository = AppDataSource.getRepository(User);
 
   async create(data: userEntry): Promise<userEntryWithoutSensitiveInfo> {
@@ -25,6 +26,9 @@ export class UserService {
     await this.userRepository.save(newUser);
 
     delete newUser.password;
+    delete user.createdAt;
+    delete user.recoveryToken;
+    delete user.updatedAt;
 
     return newUser;
   }
@@ -34,12 +38,13 @@ export class UserService {
       email,
     });
 
-    if (!getuser) {
+    if (!getuser || getuser.isActive === this.INACTIVE_USER) {
       throw boom.notFound('User not found');
     }
 
     return getuser;
   }
+
   async getUserByEmailGoogle(email: string): Promise<userEntry> {
     const getuser: userEntry | null = await this.userRepository.findOneBy({
       email,
@@ -56,26 +61,42 @@ export class UserService {
       },
     });
 
-    if (!getuser) {
+    if (!getuser || getuser.isActive === this.INACTIVE_USER) {
       throw boom.badRequest('User not found');
     }
 
     delete getuser.password;
+    delete getuser.recoveryToken;
 
     return getuser;
   }
 
   async deleteUser(id: number) {
     await this.getUserById(id);
-    const userDelete = await this.userRepository.delete({ id });
+    const userDelete = await this.userRepository.update(id, {
+      isActive: this.INACTIVE_USER,
+    });
+
     return userDelete;
   }
 
   //obtener todos los usuarios
-  async getAllUsers(): Promise<Array<userEntry>> {
-    const allUser: Array<userEntry> = await this.userRepository.find();
-    allUser.map((user: userEntry) => delete user.password);
-    return allUser;
+  async getAllUsers() {
+    const USER_IS_ACTIVE = true;
+
+    const allUser = await this.userRepository.find();
+
+    const filterUser = allUser
+      .filter((user) => user.isActive === USER_IS_ACTIVE)
+      .map((user) => {
+        delete user.password;
+        delete user.createdAt;
+        delete user.recoveryToken;
+        delete user.updatedAt;
+        return user;
+      });
+
+    return filterUser;
   }
 
   async updateUser(
@@ -93,6 +114,7 @@ export class UserService {
 
     const userUpdated = await this.getUserById(id);
     delete userUpdated.password;
+    delete userUpdated.recoveryToken;
 
     return userUpdated;
   }
@@ -102,11 +124,11 @@ export class UserService {
       email,
     });
 
-    if (!user) {
+    if (!user || user.isActive === this.INACTIVE_USER) {
       throw boom.notFound('User not found');
     }
-    const text = 'https://calendar.google.com/calendar/u/0/r';
-    const mail = {
+    const text: string = 'https://calendar.google.com/calendar/u/0/r';
+    const mail: mailBody = {
       from: `${config.smtpEmail}`, // sender address
       to: `${user.email}`, // list of receivers
       subject: 'Ha sido agregado a un evento, revise su calendario', // Subject line
