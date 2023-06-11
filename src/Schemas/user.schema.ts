@@ -1,5 +1,8 @@
 import Joi from 'joi';
-import { createPetSchema } from './pet.schema';
+import {
+  createPetSchema,
+  createPetWithMedicalHistorySchema,
+} from './pet.schema';
 
 const id = Joi.number();
 const firstName = Joi.string().min(3).max(30);
@@ -7,12 +10,8 @@ const lastName = Joi.string().min(3).max(30);
 const email = Joi.string();
 const password = Joi.string();
 const birthday = Joi.string()
-  .pattern(
-    new RegExp(
-      '^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.](19|20)\\d\\d$'
-    )
-  )
-  .error(new Error("mal formato de fecha debe ser: 'mm/dd/aaaa'"));
+  .pattern(/^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/)
+  .error(new Error("mal formato de fecha debe ser: 'dd/mm/aaaa'"));
 const role = Joi.string().valid('client', 'admin');
 const direction = Joi.string();
 const dui = Joi.string()
@@ -44,7 +43,7 @@ export const createUserWithPetSchema = Joi.object({
   direction,
   dui,
   phone,
-  pet: createPetSchema.required(),
+  pet: createPetWithMedicalHistorySchema.required(),
 });
 
 export const updateUserSchema = Joi.object({

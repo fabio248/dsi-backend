@@ -17,7 +17,7 @@ import {
   sendEmailCalendarConfirmation,
   createUserWithPetSchema,
 } from '../Schemas/user.schema';
-import { createPetSchema } from '../Schemas/pet.schema';
+import { createPetWithMedicalHistorySchema } from '../Schemas/pet.schema';
 import { createPet } from '../controllers/pet.controller';
 
 const userRouter = express.Router();
@@ -44,7 +44,7 @@ userRouter.post(
 userRouter.post(
   '/:userId/pets',
   validatorHandler(getUserSchemaById, 'params'),
-  validatorHandler(createPetSchema, 'body'),
+  validatorHandler(createPetWithMedicalHistorySchema, 'body'),
   asureValidate,
   checkerRole('admin'),
   createPet

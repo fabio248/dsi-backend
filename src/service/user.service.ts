@@ -6,31 +6,31 @@ import { userEntry, userEntryWithoutSensitiveInfo } from '../utils/types/user';
 import { config } from '../config';
 import { mailBody } from '../utils/types/mailer';
 import nodemailer from 'nodemailer';
+import {
+  convertDateEnglishFormat,
+  createNewJsonWithoutFields,
+} from '../utils/jsonFunction';
 export class UserService {
   private INACTIVE_USER = false;
   private userRepository = AppDataSource.getRepository(User);
 
-  async create(data: userEntry): Promise<userEntryWithoutSensitiveInfo> {
+  async create(data: userEntry) {
     const user = await this.userRepository.findOneBy({ email: data.email });
+    const dateEnglishFormat = convertDateEnglishFormat(
+      data.birthday.toString()
+    );
 
     if (user) {
       throw boom.badData('Email already taken');
     }
 
-    const newUser: userEntry = Object.assign(new User(), {
+    const newUser = await this.userRepository.save({
       ...data,
       password: hashSync(data.password, 10),
-      birthday: new Date(data.birthday),
+      birthday: new Date(dateEnglishFormat),
     });
 
-    await this.userRepository.save(newUser);
-
-    delete newUser.password;
-    delete user.createdAt;
-    delete user.recoveryToken;
-    delete user.updatedAt;
-
-    return newUser;
+    return this.userWithOutSensitiveInfo(newUser);
   }
 
   async getUserByEmail(email: string): Promise<userEntry> {
@@ -53,8 +53,8 @@ export class UserService {
     return getuser;
   }
 
-  async getUserById(id: number): Promise<userEntry> {
-    const getuser: userEntry | null = await this.userRepository.findOne({
+  async getUserById(id: number): Promise<Partial<User>> {
+    const getuser: User | null = await this.userRepository.findOne({
       where: { id },
       relations: {
         pet: true,
@@ -65,10 +65,7 @@ export class UserService {
       throw boom.badRequest('User not found');
     }
 
-    delete getuser.password;
-    delete getuser.recoveryToken;
-
-    return getuser;
+    return this.userWithOutSensitiveInfo(getuser);
   }
 
   async deleteUser(id: number) {
@@ -89,20 +86,13 @@ export class UserService {
     const filterUser = allUser
       .filter((user) => user.isActive === USER_IS_ACTIVE)
       .map((user) => {
-        delete user.password;
-        delete user.createdAt;
-        delete user.recoveryToken;
-        delete user.updatedAt;
-        return user;
+        return this.userWithOutSensitiveInfo(user);
       });
 
     return filterUser;
   }
 
-  async updateUser(
-    id: number,
-    data: Partial<userEntry>
-  ): Promise<userEntryWithoutSensitiveInfo> {
+  async updateUser(id: number, data: Partial<User>): Promise<Partial<User>> {
     //Check if exits the user
     await this.getUserById(id);
 
@@ -113,8 +103,6 @@ export class UserService {
     await this.userRepository.update(id, data);
 
     const userUpdated = await this.getUserById(id);
-    delete userUpdated.password;
-    delete userUpdated.recoveryToken;
 
     return userUpdated;
   }
@@ -220,5 +208,18 @@ export class UserService {
     await transporter.sendMail(infoEmail);
 
     return { message: 'mail sent' };
+  }
+
+  private userWithOutSensitiveInfo(
+    user: User,
+    fields: string[] = [
+      'password',
+      'recoveryPassword',
+      'recoveryToken',
+      'updatedAt',
+      'createdAt',
+    ]
+  ) {
+    return createNewJsonWithoutFields<User>(user, fields);
   }
 }

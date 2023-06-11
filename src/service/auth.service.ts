@@ -6,6 +6,7 @@ import { UserService } from './user.service';
 import { mailBody } from '../utils/types/mailer';
 import { userEntry } from '../utils/types/user';
 import { jwtTokenType } from '../utils/types/generic';
+import { User } from '../db/entity/User.entity';
 
 export class AuthService {
   constructor(private readonly userService: UserService) {}
@@ -145,7 +146,7 @@ export class AuthService {
   }
 
   signToken(
-    user: userEntry,
+    user: Partial<User>,
     typeToken: jwtTokenType,
     expiredToken: Date
   ): string {
@@ -162,7 +163,7 @@ export class AuthService {
     return token;
   }
 
-  CreateAccessToken(user: userEntry): string {
+  CreateAccessToken(user: Partial<User>): string {
     const expiredToken = new Date();
     expiredToken.setHours(expiredToken.getHours() + 6);
 
@@ -171,7 +172,7 @@ export class AuthService {
     return token;
   }
 
-  RefreshAccessToken(user: userEntry): string {
+  RefreshAccessToken(user: Partial<User>): string {
     const expiredToken = new Date();
     expiredToken.setMonth(expiredToken.getMonth() + 1);
 

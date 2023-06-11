@@ -13,6 +13,10 @@ export interface userEntry {
   isActive: boolean;
 }
 
+export interface createUserWithPet extends userEntry {
+  pet: createPetEntry;
+}
+
 export interface userWhitPetEntry extends userEntry {
   pets: createPetEntry;
 }

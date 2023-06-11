@@ -1,12 +1,12 @@
-import { Gender } from '../../db/entity/Pet.entity';
+import { Gender, Pet } from '../../db/entity/Pet.entity';
 
-export interface createPetEntry {
+export interface createPetEntry extends Pet {
   name: string;
-  specie: string;
+  specieId: string;
   race: string;
   color: string;
   weight: number;
-  pedigree: string;
+  pedigree: boolean;
   isHaveTatto: boolean;
   birthday: Date;
   gender: Gender;

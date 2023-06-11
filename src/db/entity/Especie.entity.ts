@@ -8,6 +8,5 @@ export class Especie extends BaseEntity {
   name: string;
 
   @OneToMany(() => Pet, (pet) => pet.specie)
-  @JoinColumn()
   pet: Pet[];
 }

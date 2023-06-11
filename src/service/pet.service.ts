@@ -2,16 +2,24 @@ import { notFound } from 'boom';
 import { AppDataSource } from '../data-source';
 import { Pet } from '../db/entity/Pet.entity';
 import { createPetEntry } from '../utils/types/pet';
-import { specieService } from '../utils/dependencies/dependencies';
+import { specieService, userService } from '../utils/dependencies/dependencies';
+import { convertDateEnglishFormat } from '../utils/jsonFunction';
 
 export class PetService {
   private petRepo = AppDataSource.getRepository(Pet);
 
-  async create(input: createPetEntry, userId: number) {
+  async create(input: createPetEntry) {
     await specieService.findOne(+input.specie);
+    await userService.getUserById(+input.user);
 
-    const newPet = Object.assign(new Pet(), { ...input, user: userId });
-    const pet = this.petRepo.save(newPet);
+    const dateEnglishFormat = convertDateEnglishFormat(
+      input.birthday.toString()
+    );
+
+    const pet = await this.petRepo.save({
+      ...input,
+      birthday: dateEnglishFormat,
+    });
 
     return pet;
   }

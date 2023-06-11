@@ -95,14 +95,15 @@ export const createUserWithPet = async (
 ) => {
   try {
     const input = req.body;
-    const { inputPet } = input;
-    const user = await userService.create({
-      ...input,
-      pet: undefined,
-    });
-    const pet = await petService.create(inputPet, user.id);
+    const inputPet = input.pet;
 
-    res.status(201).json({ message: 'entities created', data: { user, pet } });
+    const user = await userService.create({ ...input, pet: undefined });
+
+    const pet = await petService.create({ ...inputPet, user: user.id });
+
+    res
+      .status(201)
+      .json({ message: 'entities created', data: { ...user, pet } });
   } catch (error) {
     next(error);
   }
