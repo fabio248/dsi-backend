@@ -96,11 +96,16 @@ export class UserService {
     //Check if exits the user
     await this.getUserById(id);
 
+    const dateEnglishFormat = convertDateEnglishFormat(
+      data.birthday.toString()
+    );
+
     if (data.password) {
       data.password = hashSync(data.password, 10);
     }
-    //Update info
-    await this.userRepository.update(id, data);
+    (data.birthday = new Date(dateEnglishFormat)),
+      //Update info
+      await this.userRepository.update(id, data);
 
     const userUpdated = await this.getUserById(id);
 
