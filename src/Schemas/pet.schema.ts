@@ -10,7 +10,7 @@ const isHaveTatto = Joi.boolean();
 const birthday = Joi.string()
   .pattern(/^(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/)
   .error(new Error("mal formato de fecha debe ser: 'dd/mm/aaaa'"));
-const gender = Joi.string().valid('masculino', 'femenino');
+const gender = Joi.string().valid('Macho', 'Hembra');
 const pedigree = Joi.boolean();
 const specieId = Joi.number();
 
