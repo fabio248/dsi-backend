@@ -25,7 +25,11 @@ export class PetService {
   }
 
   async all(): Promise<Pet[]> {
-    const pets: Pet[] = await this.petRepo.find();
+    const pets: Pet[] = await this.petRepo.find({
+      relations: {
+        medicalHistory: { food: true, physicalExam: true, otherPet: true },
+      },
+    });
 
     return pets;
   }
@@ -52,6 +56,11 @@ export class PetService {
       relations: {
         user: true,
         specie: true,
+        medicalHistory: {
+          food: true,
+          otherPet: true,
+          physicalExam: true,
+        },
       },
     });
 

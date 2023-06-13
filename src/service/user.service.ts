@@ -57,7 +57,9 @@ export class UserService {
     const getuser: User | null = await this.userRepository.findOne({
       where: { id },
       relations: {
-        pet: true,
+        pet: {
+          medicalHistory: { food: true, physicalExam: true, otherPet: true },
+        },
       },
     });
 
@@ -96,16 +98,11 @@ export class UserService {
     //Check if exits the user
     await this.getUserById(id);
 
-    const dateEnglishFormat = convertDateEnglishFormat(
-      data.birthday.toString()
-    );
-
     if (data.password) {
       data.password = hashSync(data.password, 10);
     }
-    (data.birthday = new Date(dateEnglishFormat)),
-      //Update info
-      await this.userRepository.update(id, data);
+    //Update info
+    await this.userRepository.update(id, data);
 
     const userUpdated = await this.getUserById(id);
 
