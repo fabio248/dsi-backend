@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { petService } from '../utils/dependencies/dependencies';
+import { fileService, petService } from '../utils/dependencies/dependencies';
 import { Pet } from '../db/entity/Pet.entity';
 
 export async function createPet(
@@ -75,6 +75,23 @@ export async function deletePet(
     await petService.delete(+petId);
 
     res.status(200).json({ message: `deleted pet with id: ${petId}` });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function createFile(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { petId } = req.params;
+    const file: Express.Multer.File = req.file;
+
+    const response = await fileService.create(file, +petId);
+
+    res.status(201).json({ message: 'file created', data: response });
   } catch (error) {
     next(error);
   }

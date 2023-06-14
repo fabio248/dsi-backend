@@ -1,0 +1,53 @@
+export const selectInfoPet = {
+  id: true,
+  birthday: true,
+  color: true,
+  gender: true,
+  name: true,
+  isHaveTatto: true,
+  pedigree: true,
+  raza: true,
+  specie: {
+    id: true,
+    name: true,
+  },
+  user: {
+    firstName: true,
+    lastName: true,
+    direction: true,
+    birthday: true,
+    dui: true,
+    email: true,
+    phone: true,
+    id: true,
+  },
+  medicalHistory: {
+    id: true,
+    diasesEvaluation: true,
+    isHaveAllVaccine: true,
+    isReproduced: true,
+    observation: true,
+    descendants: true,
+    room: true,
+    physicalExam: {
+      id: true,
+      palpitations: true,
+      weight: true,
+    },
+    otherPet: {
+      id: true,
+      isLiveOtherPets: true,
+      whichPets: true,
+    },
+    food: {
+      id: true,
+      quantity: true,
+      type: true,
+    },
+    file: {
+      id: true,
+      url: true,
+      name: true,
+    },
+  },
+};

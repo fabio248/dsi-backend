@@ -1,3 +1,4 @@
+import { selectInfoPet } from './../utils/selectInfoEntity';
 import { hashSync } from 'bcryptjs';
 import boom from 'boom';
 import { User } from '../db/entity/User.entity';
@@ -13,6 +14,7 @@ import {
 export class UserService {
   private INACTIVE_USER = false;
   private userRepository = AppDataSource.getRepository(User);
+  private selectInfoPet = {};
 
   async create(data: userEntry) {
     const user = await this.userRepository.findOneBy({ email: data.email });
@@ -58,7 +60,18 @@ export class UserService {
       where: { id },
       relations: {
         pet: {
-          medicalHistory: { food: true, physicalExam: true, otherPet: true },
+          medicalHistory: {
+            food: true,
+            physicalExam: true,
+            otherPet: true,
+            file: true,
+          },
+        },
+      },
+      select: {
+        pet: {
+          ...selectInfoPet,
+          user: undefined,
         },
       },
     });

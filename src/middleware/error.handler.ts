@@ -1,5 +1,6 @@
 import boom from 'boom';
 import { NextFunction, Request, Response } from 'express';
+import { MulterError } from 'multer';
 import { QueryFailedError, TypeORMError } from 'typeorm';
 
 export function boomErrorHandler(
@@ -23,6 +24,13 @@ export function ormErrorHandler(
   res: Response,
   _next: NextFunction
 ) {
+  if (error instanceof MulterError) {
+    res.status(400).json({
+      name: `${error.name}`,
+      message: "the name of file must be 'exam'",
+    });
+  }
+  console.error(error);
   res.status(500).json({ name: `${error.name}`, message: error.stack });
 }
 export function errorHandler(

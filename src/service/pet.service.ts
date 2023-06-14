@@ -4,6 +4,7 @@ import { Pet } from '../db/entity/Pet.entity';
 import { createPetEntry } from '../utils/types/pet';
 import { specieService, userService } from '../utils/dependencies/dependencies';
 import { convertDateEnglishFormat } from '../utils/jsonFunction';
+import { selectInfoPet } from '../utils/selectInfoEntity';
 
 export class PetService {
   private petRepo = AppDataSource.getRepository(Pet);
@@ -27,12 +28,15 @@ export class PetService {
   async all(): Promise<Pet[]> {
     const pets: Pet[] = await this.petRepo.find({
       relations: {
-        medicalHistory: { food: true, physicalExam: true, otherPet: true },
+        medicalHistory: {
+          food: true,
+          physicalExam: true,
+          otherPet: true,
+          file: true,
+        },
         user: true,
       },
-      select: {
-        user: { firstName: true, lastName: true, id: true },
-      },
+      select: selectInfoPet,
     });
 
     return pets;
@@ -41,22 +45,7 @@ export class PetService {
   async findOne(petId: number): Promise<Pet> {
     const pet = await this.petRepo.findOne({
       where: { id: petId },
-      select: {
-        user: {
-          firstName: true,
-          lastName: true,
-          direction: true,
-          birthday: true,
-          dui: true,
-          email: true,
-          phone: true,
-          id: true,
-        },
-        specie: {
-          id: true,
-          name: true,
-        },
-      },
+      select: selectInfoPet,
       relations: {
         user: true,
         specie: true,
@@ -64,6 +53,7 @@ export class PetService {
           food: true,
           otherPet: true,
           physicalExam: true,
+          file: true,
         },
       },
     });

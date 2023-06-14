@@ -16,6 +16,12 @@ const config = {
   smtpPort: process.env.SMPT_PORT,
   urlFront: process.env.URL_FRONT,
   jwt_secret_key: process.env.PASS_JWT as Secret,
+  amazon: {
+    accessKey: process.env.AWS_ACCESS_KEY_ID,
+    secretKey: process.env.AWS_SECRET_ACCESS_KEY,
+    region: process.env.AWS_REGION,
+    bucketName: process.env.AWS_PUBLIC_BUCKET_NAME,
+  },
 };
 
 const configJwt = {

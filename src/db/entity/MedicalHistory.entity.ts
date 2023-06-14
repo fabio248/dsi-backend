@@ -1,9 +1,17 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { BaseEntity } from './BaseEntity';
 import Food from './Food.entity';
 import { PhysicalExam } from './PhysicalExam.entity';
 import { OtherPet } from './OtherPet.entity';
 import { Pet } from './Pet.entity';
+import { File } from './File.entity';
 
 @Entity('medical_history')
 export class MedicalHistory extends BaseEntity {
@@ -43,4 +51,7 @@ export class MedicalHistory extends BaseEntity {
   })
   @JoinColumn({ referencedColumnName: 'id', name: 'other_pet_id' })
   otherPet: OtherPet;
+
+  @OneToMany(() => File, (file) => file.medicalHistory, { cascade: true })
+  file: File[];
 }
