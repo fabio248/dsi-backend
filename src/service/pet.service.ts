@@ -40,6 +40,7 @@ export class PetService {
           email: true,
           phone: true,
           id: true,
+          role: true,
         },
       },
     });
