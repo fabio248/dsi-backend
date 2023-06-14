@@ -31,7 +31,16 @@ export class PetService {
         user: true,
       },
       select: {
-        user: { firstName: true, lastName: true, id: true },
+        user: {
+          firstName: true,
+          lastName: true,
+          direction: true,
+          birthday: true,
+          dui: true,
+          email: true,
+          phone: true,
+          id: true,
+        },
       },
     });
 
