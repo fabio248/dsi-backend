@@ -28,6 +28,10 @@ export class PetService {
     const pets: Pet[] = await this.petRepo.find({
       relations: {
         medicalHistory: { food: true, physicalExam: true, otherPet: true },
+        user: true,
+      },
+      select: {
+        user: { firstName: true, lastName: true, id: true },
       },
     });
 
