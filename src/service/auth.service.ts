@@ -165,7 +165,7 @@ export class AuthService {
 
   CreateAccessToken(user: Partial<User>): string {
     const expiredToken = new Date();
-    expiredToken.setHours(expiredToken.getHours() + 6);
+    expiredToken.setHours(expiredToken.getHours() + 12);
 
     const token = this.signToken(user, 'access_token', expiredToken);
 
