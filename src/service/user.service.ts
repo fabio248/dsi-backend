@@ -114,6 +114,12 @@ export class UserService {
     if (data.password) {
       data.password = hashSync(data.password, 10);
     }
+
+    if (data.birthday) {
+      data.birthday = new Date(
+        convertDateEnglishFormat(data.birthday.toString())
+      );
+    }
     //Update info
     await this.userRepository.update(id, data);
 

@@ -59,7 +59,7 @@ export class PetService {
     });
 
     if (!pet) {
-      notFound('pet not found');
+      throw notFound('pet not found');
     }
 
     return pet;
@@ -70,6 +70,12 @@ export class PetService {
 
     if (input.specie) {
       await specieService.findOne(+input.specie);
+    }
+
+    if (input.birthday) {
+      input.birthday = new Date(
+        convertDateEnglishFormat(input.birthday.toString())
+      );
     }
 
     await this.petRepo.update(petId, input);
