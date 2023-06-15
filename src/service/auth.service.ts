@@ -41,6 +41,7 @@ export class AuthService {
 
     return { message: 'Password changed' };
   }
+
   async sendRecoveryPassword(email: string) {
     const user = await this.userService.getUserByEmail(email);
 

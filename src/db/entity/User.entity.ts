@@ -1,6 +1,7 @@
 import { Entity, Column, OneToMany } from 'typeorm';
 import { Person } from './Person.entity';
 import { Pet } from './Pet.entity';
+import { Appointment } from './Appointment.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -38,4 +39,7 @@ export class User extends Person {
 
   @OneToMany(() => Pet, (pet) => pet.user, { cascade: true })
   pet: Pet[];
+
+  @OneToMany(() => Appointment, (appointment) => appointment.client)
+  appointments: Appointment[];
 }
