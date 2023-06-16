@@ -59,6 +59,7 @@ export class UserService {
       where: { id },
       relations: {
         pet: {
+          specie: true,
           medicalHistory: {
             food: true,
             physicalExam: true,
