@@ -7,6 +7,63 @@ import { convertDateEnglishFormat } from '../utils/jsonFunction';
 
 export class PetService {
   private petRepo = AppDataSource.getRepository(Pet);
+  private selectInfoPet = {
+    id: true,
+    isActive: true,
+    name: true,
+    gender: true,
+    raza: true,
+    color: true,
+    isHaveTatto: true,
+    pedigree: true,
+    birthday: true,
+    medicalHistory: {
+      id: true,
+      isActive: true,
+      isHaveAllVaccine: true,
+      isReproduced: true,
+      descendants: true,
+      room: true,
+      diasesEvaluation: true,
+      observation: true,
+      food: {
+        id: true,
+        type: true,
+        quantity: true,
+        isActive: true,
+      },
+      physicalExam: {
+        id: true,
+        weight: true,
+        palpitations: true,
+      },
+      otherPet: {
+        id: true,
+        isActive: true,
+        isLiveOtherPets: true,
+        whichPets: true,
+      },
+    },
+    user: {
+      firstName: true,
+      lastName: true,
+      direction: true,
+      birthday: true,
+      dui: true,
+      email: true,
+      phone: true,
+      id: true,
+    },
+    specie: {
+      id: true,
+      name: true,
+    },
+  };
+  private relationWithPet = {
+    medicalHistory: { food: true, physicalExam: true, otherPet: true },
+    user: true,
+    specie: true,
+  };
 
   async create(input: createPetEntry) {
     await specieService.findOne(+input.specie);
@@ -26,23 +83,8 @@ export class PetService {
 
   async all(): Promise<Pet[]> {
     const pets: Pet[] = await this.petRepo.find({
-      relations: {
-        medicalHistory: { food: true, physicalExam: true, otherPet: true },
-        user: true,
-      },
-      select: {
-        user: {
-          firstName: true,
-          lastName: true,
-          direction: true,
-          birthday: true,
-          dui: true,
-          email: true,
-          phone: true,
-          id: true,
-          role: true,
-        },
-      },
+      relations: this.relationWithPet,
+      select: this.selectInfoPet,
     });
 
     return pets;
@@ -51,31 +93,8 @@ export class PetService {
   async findOne(petId: number): Promise<Pet> {
     const pet = await this.petRepo.findOne({
       where: { id: petId },
-      select: {
-        user: {
-          firstName: true,
-          lastName: true,
-          direction: true,
-          birthday: true,
-          dui: true,
-          email: true,
-          phone: true,
-          id: true,
-        },
-        specie: {
-          id: true,
-          name: true,
-        },
-      },
-      relations: {
-        user: true,
-        specie: true,
-        medicalHistory: {
-          food: true,
-          otherPet: true,
-          physicalExam: true,
-        },
-      },
+      select: this.selectInfoPet,
+      relations: this.relationWithPet,
     });
 
     if (!pet) {
