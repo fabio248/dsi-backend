@@ -65,7 +65,7 @@ export default class AppointmentService {
 
   async getAllWithOutTransform(email?: string) {
     const listAppointment = await this.appointmentRepo.find({
-      where: { isActive: !this.INACTIVE_APPOINTMENT, client: { email } },
+      where: { client: { email } },
       relations: { client: true },
       select: this.selectInfoAppointment,
     });

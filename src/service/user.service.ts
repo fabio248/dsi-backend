@@ -43,7 +43,7 @@ export class UserService {
       email,
     });
 
-    if (!getuser || getuser.isActive === this.INACTIVE_USER) {
+    if (!getuser) {
       throw boom.notFound('User not found');
     }
 
@@ -80,7 +80,7 @@ export class UserService {
       },
     });
 
-    if (!getuser || getuser.isActive === this.INACTIVE_USER) {
+    if (!getuser) {
       throw boom.badRequest('User not found');
     }
 
@@ -100,9 +100,7 @@ export class UserService {
       ),
     ]);
 
-    const userDelete = await this.userRepository.update(id, {
-      isActive: this.INACTIVE_USER,
-    });
+    const userDelete = await this.userRepository.delete(id);
 
     return userDelete;
   }
