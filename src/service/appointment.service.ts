@@ -3,6 +3,8 @@ import { AppDataSource } from '../data-source';
 import { Appointment } from '../db/entity/Appointment.entity';
 import { convertDateEnglishFormat } from '../utils/jsonFunction';
 import { badData } from 'boom';
+import { plainToInstance } from 'class-transformer';
+import appointmentResponseDto from '../utils/appointment.dto';
 
 export default class AppointmentService {
   private appointmentRepo = AppDataSource.getRepository(Appointment);
@@ -24,13 +26,13 @@ export default class AppointmentService {
     },
   };
 
-  async create(data: Partial<Appointment>): Promise<Appointment> {
+  async create(data: Partial<Appointment>) {
     const startDate = convertDateEnglishFormat(data.startDate.toString());
     const endDate = convertDateEnglishFormat(data.endDate.toString());
 
     const exitingAppointment = await this.getAll();
 
-    const appointment = await this.appointmentRepo.create({
+    const appointment = this.appointmentRepo.create({
       ...data,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
@@ -41,13 +43,12 @@ export default class AppointmentService {
     if (!isValidDate) {
       throw badData('Este horario no se encuentra disponible');
     }
-
     this.appointmentRepo.save(appointment);
 
     delete appointment.createdAt;
     delete appointment.updatedAt;
 
-    return appointment;
+    return plainToInstance(appointmentResponseDto, appointment);
   }
 
   async getAll(email?: string) {
@@ -57,7 +58,9 @@ export default class AppointmentService {
       select: this.selectInfoAppointment,
     });
 
-    return listAppointment;
+    return listAppointment.map((appointment) =>
+      plainToInstance(appointmentResponseDto, appointment)
+    );
   }
 
   async getAppointById(id: number) {
@@ -71,7 +74,7 @@ export default class AppointmentService {
       throw notFound('appointment not found');
     }
 
-    return appointment;
+    return plainToInstance(appointmentResponseDto, appointment);
   }
 
   async update(data: Partial<Appointment>, id: number) {
