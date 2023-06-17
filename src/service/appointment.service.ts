@@ -40,9 +40,9 @@ export default class AppointmentService {
     return appointment;
   }
 
-  async getAll() {
+  async getAll(email?: string) {
     const listAppointment = await this.appointmentRepo.find({
-      where: { isActive: !this.INACTIVE_APPOINTMENT },
+      where: { isActive: !this.INACTIVE_APPOINTMENT, client: { email } },
       relations: { client: true },
       select: this.selectInfoAppointment,
     });

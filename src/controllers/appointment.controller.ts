@@ -47,7 +47,12 @@ export async function getAllAppointments(
   next: NextFunction
 ) {
   try {
-    const listAppointments = await appointmentService.getAll();
+    const email = req.query['email'];
+    let listAppointments;
+
+    listAppointments = await appointmentService.getAll(
+      email as string | undefined
+    );
 
     res
       .status(200)

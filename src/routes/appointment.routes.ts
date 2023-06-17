@@ -12,6 +12,10 @@ import {
   getOneAppointent,
   updateAppointment,
 } from '../controllers/appointment.controller';
+import {
+  getUserSchemaByEmail,
+  getUserSchemaById,
+} from '../Schemas/user.schema';
 
 export const appointmentRouter = Router();
 
