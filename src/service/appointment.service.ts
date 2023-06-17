@@ -91,8 +91,9 @@ export default class AppointmentService {
         ? new Date(convertDateEnglishFormat(data.endDate.toString()))
         : undefined,
     });
+    const appointment = await this.getAppointById(id);
 
-    return await this.getAppointById(id);
+    return plainToInstance(appointmentResponseDto, appointment);
   }
 
   async delete(id: number) {
