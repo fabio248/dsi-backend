@@ -46,7 +46,7 @@ userRouter.post(
   validatorHandler(getUserSchemaById, 'params'),
   validatorHandler(createPetWithMedicalHistorySchema, 'body'),
   asureValidate,
-  checkerRole('admin'),
+  checkerRole('admin', 'client'),
   createPet
 );
 

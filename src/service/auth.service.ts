@@ -4,7 +4,6 @@ import boom from 'boom';
 import { config } from '../config';
 import { UserService } from './user.service';
 import { mailBody } from '../utils/types/mailer';
-import { userEntry } from '../utils/types/user';
 import { jwtTokenType } from '../utils/types/generic';
 import { User } from '../db/entity/User.entity';
 
@@ -28,15 +27,15 @@ export class AuthService {
 
   async changePassword(token: string, newPassword: string) {
     const payload = jwt.verify(token, config.jwt_secret_key);
-    const user = await this.userService.getUserById(+payload.sub);
+    const user = await this.userService.getRecoveryToken(+payload.sub);
 
     if (user.recoveryToken !== token) {
       throw boom.unauthorized();
     }
-
+    
     await this.userService.updateUser(user.id, {
       password: newPassword,
-      recoveryToken: undefined,
+      recoveryToken: null,
     });
 
     return { message: 'Password changed' };

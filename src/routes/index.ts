@@ -11,7 +11,11 @@ function routerApi(app: Application) {
   app.use('/api/v1', router);
   router.use('/users', userRouter);
   router.use('/auth', authRouter);
-  router.use('/pets', [asureValidate, checkerRole('admin')], petRouter);
+  router.use(
+    '/pets',
+    [asureValidate, checkerRole('admin', 'client')],
+    petRouter
+  );
   router.use('/species', [asureValidate, checkerRole('admin')], specieRoute);
   router.use(
     '/appointments',

@@ -231,6 +231,13 @@ export class UserService {
     return { message: 'mail sent' };
   }
 
+  async getRecoveryToken(userId: number) {
+    return this.userRepository.findOne({
+      where: { id: userId },
+      select: { recoveryToken: true, id: true },
+    });
+  }
+
   private userWithOutSensitiveInfo(
     user: User,
     fields: string[] = [

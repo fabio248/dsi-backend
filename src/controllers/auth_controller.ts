@@ -71,8 +71,12 @@ const changePassword = async (
   next: NextFunction
 ) => {
   try {
-    const { newPassword, token } = req.body;
-    const rta = await authService.changePassword(token, newPassword);
+    const input = req.body;
+
+    const rta = await authService.changePassword(
+      input.token,
+      input.newPassword
+    );
     res.json(rta);
   } catch (error) {
     next(error);
