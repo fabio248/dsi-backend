@@ -105,7 +105,9 @@ export class PetService {
   }
 
   async update(petId: number, input: Partial<Pet>) {
-    await this.findOne(petId);
+    let otherPet, physicalExam, food;
+
+    const pet = await this.findOne(petId);
 
     if (input.specie) {
       await specieService.findOne(+input.specie);
@@ -117,7 +119,33 @@ export class PetService {
       );
     }
 
-    await this.petRepo.update(petId, input);
+    const { medicalHistory } = input;
+
+    if (medicalHistory) {
+      otherPet = medicalHistory.otherPet;
+      physicalExam = medicalHistory.physicalExam;
+      food = medicalHistory.food;
+    }
+
+    const fieldtoUpdate = {
+      ...pet,
+      ...input,
+      medicalHistory: {
+        ...pet.medicalHistory,
+        ...medicalHistory,
+        otherPet: {
+          ...pet.medicalHistory.otherPet,
+          ...otherPet,
+        },
+        physicalExam: {
+          ...pet.medicalHistory.physicalExam,
+          ...physicalExam,
+        },
+        food: { ...pet.medicalHistory.food, ...food },
+      },
+    };
+
+    await this.petRepo.save(fieldtoUpdate);
 
     return await this.findOne(petId);
   }

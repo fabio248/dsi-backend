@@ -1,5 +1,8 @@
 import Joi from 'joi';
-import { createMedicalHistorySchema } from './medicalHistory.schema';
+import {
+  createMedicalHistorySchema,
+  updateMedicalHistorySchema,
+} from './medicalHistory.schema';
 
 const id = Joi.number();
 const name = Joi.string();
@@ -47,6 +50,7 @@ export const updatePetShema = Joi.object({
   birthday,
   gender,
   pedigree,
+  medicalHistory: updateMedicalHistorySchema.min(1),
 }).min(1);
 
 export const getPetSchema = Joi.object({
