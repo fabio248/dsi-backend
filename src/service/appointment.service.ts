@@ -1,9 +1,8 @@
 import { notFound } from '@hapi/boom';
 import { AppDataSource } from '../data-source';
 import { Appointment } from '../db/entity/Appointment.entity';
-import { userService } from '../utils/dependencies/dependencies';
 import { convertDateEnglishFormat } from '../utils/jsonFunction';
-import { createAppointment } from '../utils/types/appoinment';
+import { badData } from 'boom';
 
 export default class AppointmentService {
   private appointmentRepo = AppDataSource.getRepository(Appointment);
@@ -29,11 +28,22 @@ export default class AppointmentService {
     const startDate = convertDateEnglishFormat(data.startDate.toString());
     const endDate = convertDateEnglishFormat(data.endDate.toString());
 
-    const appointment = await this.appointmentRepo.save({
+    const exitingAppointment = await this.getAll();
+
+    const appointment = await this.appointmentRepo.create({
       ...data,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
     });
+
+    const isValidDate = this.validateEvent(appointment, exitingAppointment);
+
+    if (!isValidDate) {
+      throw badData('Este horario no se encuentra disponible');
+    }
+
+    this.appointmentRepo.save(appointment);
+
     delete appointment.createdAt;
     delete appointment.updatedAt;
 
@@ -88,5 +98,37 @@ export default class AppointmentService {
     return await this.appointmentRepo.update(id, {
       isActive: this.INACTIVE_APPOINTMENT,
     });
+  }
+
+  validateEvent(
+    newAppointment: Appointment,
+    existingAppointments: Appointment[]
+  ): boolean {
+    const startDate = new Date(newAppointment.startDate);
+
+    if (startDate <= new Date()) {
+      return false;
+    }
+
+    for (const appointment of existingAppointments) {
+      if (
+        appointment.startDate.toISOString().substr(0, 10) ===
+        newAppointment.startDate.toISOString().substr(0, 10)
+      ) {
+        if (
+          (appointment.startDate <= newAppointment.startDate &&
+            newAppointment.startDate < appointment.endDate) ||
+          (appointment.startDate < newAppointment.endDate &&
+            newAppointment.endDate <= appointment.endDate) ||
+          (newAppointment.startDate <= appointment.startDate &&
+            appointment.startDate < newAppointment.endDate) ||
+          (newAppointment.startDate < appointment.endDate &&
+            appointment.endDate <= newAppointment.endDate)
+        ) {
+          return false; // Conflict found
+        }
+      }
+    }
+    return true; // No conflicts found
   }
 }
