@@ -15,7 +15,7 @@ function routerApi(app: Application) {
   router.use('/species', [asureValidate, checkerRole('admin')], specieRoute);
   router.use(
     '/appointments',
-    [asureValidate, checkerRole('admin')],
+    [asureValidate, checkerRole('admin', 'client')],
     appointmentRouter
   );
 }
