@@ -12,8 +12,8 @@ import { Especie } from './Especie.entity';
 import { MedicalHistory } from './MedicalHistory.entity';
 
 export enum Gender {
-  M = 'masculino',
-  F = 'femenino',
+  M = 'macho',
+  F = 'hembra',
 }
 @Entity('pet')
 export class Pet extends BaseEntity {
