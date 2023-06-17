@@ -3,7 +3,7 @@ import { hashSync } from 'bcryptjs';
 import boom from 'boom';
 import { User } from '../db/entity/User.entity';
 import { AppDataSource } from '../data-source';
-import { userEntry, userEntryWithoutSensitiveInfo } from '../utils/types/user';
+import { userEntry } from '../utils/types/user';
 import { config } from '../config';
 import { mailBody } from '../utils/types/mailer';
 import nodemailer from 'nodemailer';
@@ -11,9 +11,11 @@ import {
   convertDateEnglishFormat,
   createNewJsonWithoutFields,
 } from '../utils/jsonFunction';
+import { Pet } from '../db/entity/Pet.entity';
 export class UserService {
   private INACTIVE_USER = false;
   private userRepository = AppDataSource.getRepository(User);
+  private petRepository = AppDataSource.getRepository(Pet);
 
   async create(data: userEntry) {
     const user = await this.userRepository.findOneBy({ email: data.email });
@@ -84,10 +86,17 @@ export class UserService {
   }
 
   async deleteUser(id: number) {
-    await this.getUserById(id);
+    const { pet } = await this.getUserById(id);
+
     const userDelete = await this.userRepository.update(id, {
       isActive: this.INACTIVE_USER,
     });
+
+    Promise.all(
+      pet.map((pet) =>
+        this.petRepository.update({ id: pet.id }, { isActive: false })
+      )
+    );
 
     return userDelete;
   }
