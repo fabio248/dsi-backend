@@ -6,6 +6,7 @@ import { specieService, userService } from '../utils/dependencies/dependencies';
 import { convertDateEnglishFormat } from '../utils/jsonFunction';
 
 export class PetService {
+  private PET_IS_INACTIVE = false;
   private petRepo = AppDataSource.getRepository(Pet);
   private selectInfoPet = {
     id: true,
@@ -85,6 +86,9 @@ export class PetService {
     const pets: Pet[] = await this.petRepo.find({
       relations: this.relationWithPet,
       select: this.selectInfoPet,
+      where: {
+        isActive: true,
+      },
     });
 
     return pets;
@@ -92,7 +96,7 @@ export class PetService {
 
   async findOne(petId: number): Promise<Pet> {
     const pet = await this.petRepo.findOne({
-      where: { id: petId },
+      where: { id: petId, isActive: true },
       select: this.selectInfoPet,
       relations: this.relationWithPet,
     });
@@ -152,6 +156,6 @@ export class PetService {
 
   async delete(petId: number): Promise<void> {
     await this.findOne(petId);
-    await this.petRepo.delete({ id: petId });
+    await this.petRepo.update({ id: petId }, { isActive: false });
   }
 }

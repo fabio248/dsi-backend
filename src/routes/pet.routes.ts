@@ -4,6 +4,7 @@ import {
   getPet,
   updatePet,
   createFile,
+  deletePet,
 } from '../controllers/pet.controller';
 import { validatorHandler } from '../middleware/validator.handler';
 import { getPetSchema, updatePetShema } from '../Schemas/pet.schema';
@@ -30,4 +31,5 @@ petRouter
       fileSizeLimiter, // Custom middleware to check file size limit
     ],
     createFile
-  );
+  )
+  .delete(deletePet);
