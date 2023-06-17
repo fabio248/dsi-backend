@@ -30,7 +30,7 @@ export default class AppointmentService {
     const startDate = convertDateEnglishFormat(data.startDate.toString());
     const endDate = convertDateEnglishFormat(data.endDate.toString());
 
-    const exitingAppointment = await this.getAll();
+    const exitingAppointment = await this.getAllWithOutTransform();
 
     const appointment = this.appointmentRepo.create({
       ...data,
@@ -61,6 +61,16 @@ export default class AppointmentService {
     return listAppointment.map((appointment) =>
       plainToInstance(appointmentResponseDto, appointment)
     );
+  }
+
+  async getAllWithOutTransform(email?: string) {
+    const listAppointment = await this.appointmentRepo.find({
+      where: { isActive: !this.INACTIVE_APPOINTMENT, client: { email } },
+      relations: { client: true },
+      select: this.selectInfoAppointment,
+    });
+
+    return listAppointment;
   }
 
   async getAppointById(id: number) {

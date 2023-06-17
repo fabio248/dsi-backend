@@ -12,10 +12,12 @@ import {
   createNewJsonWithoutFields,
 } from '../utils/jsonFunction';
 import { Pet } from '../db/entity/Pet.entity';
+import { Appointment } from '../db/entity/Appointment.entity';
 export class UserService {
   private INACTIVE_USER = false;
   private userRepository = AppDataSource.getRepository(User);
   private petRepository = AppDataSource.getRepository(Pet);
+  private appointmentRepository = AppDataSource.getRepository(Appointment);
 
   async create(data: userEntry) {
     const user = await this.userRepository.findOneBy({ email: data.email });
@@ -86,17 +88,21 @@ export class UserService {
   }
 
   async deleteUser(id: number) {
-    const { pet } = await this.getUserById(id);
+    const { pet, appointments } = await this.userRepository.findOne({
+      where: { id },
+      relations: { pet: true, appointments: true },
+    });
+
+    Promise.all([
+      pet.map((pet) => this.petRepository.delete({ id: pet.id })),
+      appointments.map((appointen) =>
+        this.appointmentRepository.delete({ id: appointen.id })
+      ),
+    ]);
 
     const userDelete = await this.userRepository.update(id, {
       isActive: this.INACTIVE_USER,
     });
-
-    Promise.all(
-      pet.map((pet) =>
-        this.petRepository.update({ id: pet.id }, { isActive: false })
-      )
-    );
 
     return userDelete;
   }
