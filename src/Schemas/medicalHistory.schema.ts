@@ -22,7 +22,7 @@ export const createMedicalHistorySchema = Joi.object({
   observation: observation.required(),
   food: createFoodSchema.required(),
   physicalExam: createPhysicalExamSchema.required(),
-  otherPet: createOtherPetSchema.required(),
+  otherPet: createOtherPetSchema,
 });
 
 export const updateMedicalHistorySchema = Joi.object({
